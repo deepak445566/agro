@@ -91,7 +91,13 @@ app.use((err, req, res, next) => {
   });
 });
 
-
+// 404 handler
+app.use('*', (req, res) => {
+  res.status(404).json({
+    success: false,
+    message: 'Route not found'
+  });
+});
 
 // Server start (for local development)
 if (process.env.NODE_ENV !== 'production') {
