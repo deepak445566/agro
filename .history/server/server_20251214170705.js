@@ -43,7 +43,8 @@ app.use(cors({
   exposedHeaders: ['set-cookie']
 }));
 
-
+// Handle preflight requests
+app.options('*', cors());
 
 // Trust proxy for secure cookies
 app.set('trust proxy', 1);

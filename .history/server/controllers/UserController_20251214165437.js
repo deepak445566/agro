@@ -2,23 +2,6 @@ import User from "../models/User.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
-// Helper function for cookie settings
-const getCookieOptions = () => {
-  const isProduction = process.env.NODE_ENV === 'production';
-  
-  return {
-    httpOnly: true,
-    secure: isProduction,
-    sameSite: isProduction ? 'none' : 'strict',
-    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-    path: '/',
-    ...(isProduction && {
-      domain: '.vercel.app', // Adjust based on your domain
-      partitioned: true // For Chrome's cookie partitioning
-    })
-  };
-};
-
 // ================== Register User ==================
 export const registerUser = async (req, res) => {
   try {
@@ -53,30 +36,29 @@ export const registerUser = async (req, res) => {
 
     // 5. Create token
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "7d",
+      expiresIn: "7d", // token expiry = 7 days
     });
 
     // 6. Set cookie
-    res.cookie("token", token, getCookieOptions());
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    });
 
     // 7. Response
-    return res.status(201).json({
+    return res.json({
       success: true,
-      message: "User registered successfully",
       user: {
         id: user._id,
         email: user.email,
         name: user.name,
       },
-      token: process.env.NODE_ENV === 'development' ? token : undefined // Send token in response for frontend storage
     });
   } catch (error) {
-    console.log("Registration error:", error.message);
-    res.status(500).json({ 
-      success: false, 
-      message: "Internal server error",
-      error: process.env.NODE_ENV === 'development' ? error.message : undefined
-    });
+    console.log(error.message);
+    res.status(500).json({ success: false, message: error.message });
   }
 };
 
@@ -98,7 +80,7 @@ export const loginUser = async (req, res) => {
     if (!user) {
       return res.status(400).json({
         success: false,
-        message: "Invalid credentials",
+        message: "User does not exist",
       });
     }
 
@@ -117,93 +99,68 @@ export const loginUser = async (req, res) => {
     });
 
     // 5. Set cookie
-    res.cookie("token", token, getCookieOptions());
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
 
     // 6. Response
     return res.json({
       success: true,
-      message: "Login successful",
       user: {
         id: user._id,
         email: user.email,
         name: user.name,
       },
-      token: process.env.NODE_ENV === 'development' ? token : undefined
     });
   } catch (error) {
-    console.log("Login error:", error.message);
-    res.status(500).json({ 
-      success: false, 
-      message: "Internal server error",
-      error: process.env.NODE_ENV === 'development' ? error.message : undefined
-    });
+    console.log(error.message);
+    res.status(500).json({ success: false, message: error.message });
   }
 };
 
 // ================== Check Auth ==================
 export const isAuth = async (req, res) => {
   try {
-    // Check for token in cookies first, then Authorization header
-    let token = req.cookies.token;
-    
-    if (!token && req.headers.authorization) {
-      const authHeader = req.headers.authorization;
-      if (authHeader.startsWith('Bearer ')) {
-        token = authHeader.substring(7);
-      }
-    }
-
+    const token = req.cookies.token;
     if (!token) {
-      return res.status(200).json({ 
-        success: false, 
-        message: "Not authenticated" 
-      });
+      return res.status(401).json({ success: false, message: "Not authorized" });
     }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const user = await User.findById(decoded.id).select("-password");
 
     if (!user) {
-      return res.status(200).json({ 
-        success: false, 
-        message: "User not found" 
-      });
+      return res.status(401).json({ success: false, message: "User not found" });
     }
 
     return res.json({
       success: true,
-      message: "Authenticated",
       user,
     });
   } catch (error) {
-    console.log("Auth check error:", error.message);
-    
-    // Clear invalid token cookie
-    res.clearCookie("token", getCookieOptions());
-    
-    return res.status(200).json({ 
-      success: false, 
-      message: "Authentication failed",
-      error: process.env.NODE_ENV === 'development' ? error.message : undefined
-    });
+    console.log(error.message);
+    res.status(500).json({ success: false, message: error.message });
   }
 };
 
 // ================== Logout User ==================
 export const logout = async (req, res) => {
   try {
-    res.clearCookie("token", getCookieOptions());
-    
+    res.clearCookie("token", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
+    });
+
     return res.json({
       success: true,
       message: "Logged out successfully",
     });
   } catch (error) {
-    console.log("Logout error:", error.message);
-    res.status(500).json({ 
-      success: false, 
-      message: "Internal server error",
-      error: process.env.NODE_ENV === 'development' ? error.message : undefined
-    });
+    console.log(error.message);
+    res.status(500).json({ success: false, message: error.message });
   }
 };
