@@ -3,36 +3,41 @@ import { useAppContext } from '../context/AppContext';
 import toast from 'react-hot-toast';
 
 function Login() {
-  const {setShowLogin, loginUser, registerUser, navigate} = useAppContext();
-  const [state, setState] = React.useState("login");
-  const [name, setName] = React.useState("");
-  const [email, setEmail] = React.useState("");
-  const [password, setPassword] = React.useState("");
 
-  const onSubmitHandle = async (e) => {
-    e.preventDefault();
 
-    try {
-      let result;
-      
-      if (state === "register") {
-        // Use register function from context
-        result = await registerUser(name, email, password);
-      } else {
-        // Use login function from context
-        result = await loginUser(email, password);
-      }
+  const {setShowLogin,setUser,axios,navigate}= useAppContext()
+      const [state, setState] = React.useState("login");
+    const [name, setName] = React.useState("");
+    const [email, setEmail] = React.useState("");
+    const [password, setPassword] = React.useState("");
 
-      if (result.success) {
-        navigate('/');
-        setShowLogin(false);
-      } else {
-        toast.error(result.message || "Operation failed");
-      }
-    } catch (error) {
-      toast.error(error.response?.data?.message || error.message);
+
+
+const onSubmitHandle = async (e) => {
+  e.preventDefault();
+
+  try {
+    let payload = {};
+
+    if (state === "register") {
+      payload = { name, email, password };
+    } else {
+      payload = { email, password }; // login expects only these two
     }
-  };
+
+    const { data } = await axios.post(`/api/user/${state}`, payload);
+
+    if (data.success) {
+      navigate('/');
+      setUser(data.user);
+      setShowLogin(false);
+    } else {
+      toast.error(data.message);
+    }
+  } catch (error) {
+    toast.error(error.response?.data?.message || error.message);
+  }
+};
 
   return (
    <>
@@ -73,4 +78,4 @@ function Login() {
   )
 }
 
-export default Login;
+export default Login

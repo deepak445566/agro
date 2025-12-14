@@ -3,10 +3,11 @@ import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import axios from "axios";
 
+// ✅ AXIOS CONFIGURATION में ये ADD करो
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = import.meta.env.VITE_BACKEND_URL;
 
-// ✅ 1. AXIOS INTERCEPTOR ADD करो (सबसे ऊपर)
+// ✅ TOKEN को हर request के साथ भेजने के लिए
 axios.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
@@ -23,17 +24,17 @@ export const AppContext = createContext();
 export const AppContextProvider = ({ children }) => {
   const navigate = useNavigate();
 
-  // ✅ 2. USER STATE को localStorage से initialize करो
+  // ✅ USER STATE को localStorage से initialize करो
   const [user, setUser] = useState(() => {
     const savedUser = localStorage.getItem('user');
     return savedUser ? JSON.parse(savedUser) : null;
   });
-  
+
   const [isSeller, setIsSeller] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
   const [products, setProducts] = useState([]);
   
-  // ✅ 3. CART STATE को localStorage से initialize करो
+  // ✅ CART STATE को localStorage से initialize करो
   const [cartItems, setCartItems] = useState(() => {
     const savedCart = localStorage.getItem('cart');
     return savedCart ? JSON.parse(savedCart) : {};
@@ -41,23 +42,17 @@ export const AppContextProvider = ({ children }) => {
   
   const [search, setSearch] = useState({});
 
-  //status//
-  const fetchSeller = async () => {
-    try {
-      const {data} = await axios.get("/api/seller/isauth");
-      if(data.success){
-        setIsSeller(true);
-      } else {
-        setIsSeller(false);
-      }
-    } catch (error) {
-      setIsSeller(false);
-    }
-  }
-
-  // ✅ 4. UPDATED fetchUser function
+  // ✅ UPDATED fetchUser - TOKEN को localStorage से लो
   const fetchUser = async () => {
     try {
+      const token = localStorage.getItem('token');
+      
+      // Agar token nahi hai to API call mat karo
+      if (!token) {
+        setUser(null);
+        return;
+      }
+      
       const {data} = await axios.get('/api/user/isauth');
       if(data.success){
         setUser(data.user);
@@ -73,70 +68,59 @@ export const AppContextProvider = ({ children }) => {
       }
     } catch (error) {
       setUser(null);
-      // Error aaye to localStorage clear करो
-      localStorage.removeItem('user');
+      // ✅ Agar error aaye to localStorage clear kar do
       localStorage.removeItem('token');
+      localStorage.removeItem('user');
     }
-  }
+  };
 
-  // ✅ 5. NEW: Login function jo token save karegi
+  // ✅ NEW: LOGIN FUNCTION जो TOKEN SAVE करेगी
   const loginUser = async (email, password) => {
     try {
       const {data} = await axios.post('/api/user/login', {email, password});
       
-      if(data.success){
-        // ✅ TOKEN को localStorage में SAVE करो (Response से)
-        if (data.token) {
-          localStorage.setItem('token', data.token);
-          console.log("✅ Token saved to localStorage:", data.token.substring(0, 20) + "...");
-        }
+      if(data.success && data.token){
+        // ✅ TOKEN को localStorage में SAVE करो
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('user', JSON.stringify(data.user));
         
-        // ✅ USER को localStorage में SAVE करो
-        if (data.user) {
-          localStorage.setItem('user', JSON.stringify(data.user));
-          setUser(data.user);
-        }
+        // User state update करो
+        setUser(data.user);
         
         toast.success("Login successful!");
         return { success: true };
+      } else {
+        toast.error(data.message || "Login failed");
+        return { success: false };
       }
-      toast.error(data.message || "Login failed");
-      return { success: false };
     } catch (error) {
       toast.error("Login failed");
       return { success: false };
     }
-  }
+  };
 
-  // ✅ 6. NEW: Register function
+  // ✅ NEW: REGISTER FUNCTION
   const registerUser = async (name, email, password) => {
     try {
       const {data} = await axios.post('/api/user/register', {name, email, password});
       
-      if(data.success){
+      if(data.success && data.token){
         // ✅ TOKEN को localStorage में SAVE करो
-        if (data.token) {
-          localStorage.setItem('token', data.token);
-        }
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('user', JSON.stringify(data.user));
         
-        // ✅ USER को localStorage में SAVE करो
-        if (data.user) {
-          localStorage.setItem('user', JSON.stringify(data.user));
-          setUser(data.user);
-        }
-        
+        setUser(data.user);
         toast.success("Registration successful!");
         return { success: true };
       }
-      toast.error(data.message || "Registration failed");
       return { success: false };
     } catch (error) {
       toast.error("Registration failed");
       return { success: false };
     }
-  }
+  };
 
-  // ✅ 7. NEW: Logout function
+  // ✅ NEW: LOGOUT FUNCTION
   const logoutUser = async () => {
     try {
       await axios.get('/api/user/logout');
@@ -155,23 +139,9 @@ export const AppContextProvider = ({ children }) => {
     
     toast.success("Logged out");
     navigate('/');
-  }
-
-  // Fetch products
-  const fetchProducts = async () => {
-    try {
-      const {data} = await axios.get("/api/product/list");
-      if(data.success){
-        setProducts(data.products);
-      } else {
-        toast.error(data.message);
-      }
-    } catch(error) {
-      toast.error(error.message);
-    }
   };
 
-  // Add to cart - WITH LOCALSTORAGE SAVE
+  // Add to cart function में LOCALSTORAGE SAVE करो
   const addToCart = (itemId) => {
     let cartData = structuredClone(cartItems);
     if (cartData[itemId]) {
@@ -187,7 +157,7 @@ export const AppContextProvider = ({ children }) => {
     toast.success("Added to Cart");
   };
 
-  // Update cart quantity - WITH LOCALSTORAGE SAVE
+  // Update cart function में भी LOCALSTORAGE SAVE करो
   const updateCart = (itemId, quantity) => {
     let cartData = structuredClone(cartItems);
     if (quantity <= 0) {
@@ -201,7 +171,7 @@ export const AppContextProvider = ({ children }) => {
     localStorage.setItem('cart', JSON.stringify(cartData));
   };
 
-  // Remove product from cart - WITH LOCALSTORAGE SAVE
+  // Remove from cart में भी LOCALSTORAGE SAVE करो
   const removeFromCart = (itemId) => {
     let cartData = structuredClone(cartItems);
     if (cartData[itemId]) {
@@ -215,51 +185,35 @@ export const AppContextProvider = ({ children }) => {
     }
   };
 
-  const getcount = () => {
-    let totalcount = 0;
-    for (const item in cartItems) {
-      totalcount += cartItems[item];
-    }
-    return totalcount;
-  };
-
-  const gettotal = () => {
-    let totalAmount = 0;
-    for (const itemId in cartItems) {
-      let itemInfo = products.find((pro) => pro._id === itemId);
-      if (itemInfo && cartItems[itemId] > 0) {
-        totalAmount += itemInfo.offerPrice * cartItems[itemId];
-      }
-    }
-    return Math.floor(totalAmount * 100) / 100;
-  };
-
   useEffect(() => {
+    // App start pe user check करो
     fetchSeller();
-    fetchUser();
+    fetchUser(); // ✅ Ye ab token check karega
     fetchProducts();
   }, []);
 
-  //database cart items//
+  // Database cart update
   useEffect(() => {
-    const updateCart = async () => {
-      try {
-        const { data } = await axios.post('/api/cart/update', {
-          userId: user._id,
-          cartItems
-        });
-        if (!data.success) {
-          toast.error(data.message);
+    const updateCartToDB = async () => {
+      if (user && user._id) {
+        try {
+          const { data } = await axios.post('/api/cart/update', {
+            userId: user._id,
+            cartItems
+          });
+          if (!data.success) {
+            toast.error(data.message);
+          }
+        } catch (error) {
+          toast.error(error.message);
         }
-      } catch (error) {
-        toast.error(error.message);
       }
     };
 
     if(user){
-      updateCart();
+      updateCartToDB();
     }
-  }, [cartItems]);
+  }, [cartItems, user]);
 
   const value = {
     navigate,
@@ -281,7 +235,7 @@ export const AppContextProvider = ({ children }) => {
     axios,
     fetchProducts,
     setCartItems,
-    // ✅ 8. YE NEW FUNCTIONS ADD करो
+    // ✅ NEW FUNCTIONS ADD करो
     loginUser,
     registerUser,
     logoutUser,
@@ -291,7 +245,6 @@ export const AppContextProvider = ({ children }) => {
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 };
 
-// Custom hook
 export const useAppContext = () => {
   return useContext(AppContext);
 };
