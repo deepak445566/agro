@@ -23,7 +23,7 @@ await connectCloudinary();
 app.use(cors({
   origin: [
   
-   'https://agro-gamma-one.vercel.app',
+   'https://agro-gamma-one.vercel.app/'
     'http://localhost:5173'
   ],
   credentials: true
