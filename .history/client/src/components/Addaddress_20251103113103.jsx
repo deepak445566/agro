@@ -31,7 +31,6 @@ function Addaddress() {
   });
 
   const [loading, setLoading] = useState(false);
-  const [isAuthenticating, setIsAuthenticating] = useState(true);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -68,7 +67,7 @@ function Addaddress() {
   const onSubmitHandler = async (e) => {
     e.preventDefault();
     
-    if (!user || !user._id) {
+    if (!user) {
       toast.error('Please login to add address');
       navigate('/login');
       return;
@@ -81,13 +80,14 @@ function Addaddress() {
     setLoading(true);
     
     try {
-      console.log('=== ADDING ADDRESS ===');
-      console.log('User:', user);
-      console.log('User ID:', user._id);
-      console.log('Token available:', !!localStorage.getItem('token'));
+      console.log('Making API call to /api/address/add');
+      console.log('Current user:', user);
+      
+    
+      const token = localStorage.getItem('token');
+      console.log('Token available:', !!token);
       
       const requestData = {
-        userId: user._id, // ✅ USER ID ADD करो
         address: address
       };
       
@@ -117,8 +117,8 @@ function Addaddress() {
         errorMessage = error.message;
       } else if (error.response?.status === 401) {
         errorMessage = 'Session expired. Please login again.';
+       
         localStorage.removeItem('token');
-        localStorage.removeItem('user');
         navigate('/login');
       }
       
@@ -128,63 +128,20 @@ function Addaddress() {
     }
   };
 
-  // ✅ UPDATED useEffect
   useEffect(() => {
-    const checkAuth = async () => {
-      console.log('🔄 Checking authentication...');
-      
-      // Pehle localStorage check करो
-      const savedUser = localStorage.getItem('user');
-      const savedToken = localStorage.getItem('token');
-      
-      console.log('Saved user in localStorage:', savedUser);
-      console.log('Saved token in localStorage:', savedToken);
-      
-      if (savedUser && savedToken) {
-        // Agar localStorage में data hai to use karo
-        const parsedUser = JSON.parse(savedUser);
-        console.log('Parsed user from localStorage:', parsedUser);
-        
-        if (parsedUser && parsedUser._id) {
-          // State update करो
-          setUser(parsedUser);
-          setIsAuthenticating(false);
-          return;
-        }
-      }
-      
-      // Agar localStorage में nahi hai to API se fetch करo
-      if (!user || !user._id) {
-        console.log('🔄 Fetching user from API...');
-        const fetchedUser = await fetchUser();
-        
-        if (fetchedUser && fetchedUser._id) {
-          console.log('✅ User fetched successfully:', fetchedUser._id);
-          setIsAuthenticating(false);
-        } else {
-          console.log('❌ No user found, redirecting to login');
+    console.log('User in AddAddress:', user);
+    
+    if (!user) {
+      console.log('No user found, checking authentication...');
+      // Try to fetch user again
+      fetchUser().then(updatedUser => {
+        if (!updatedUser) {
           toast.error('Please login to continue');
           navigate("/login");
         }
-      } else {
-        setIsAuthenticating(false);
-      }
-    };
-    
-    checkAuth();
+      });
+    }
   }, [user, navigate, fetchUser]);
-
-  // ✅ Loading state
-  if (isAuthenticating) {
-    return (
-      <div className="mt-10 pb-16 flex justify-center items-center h-64">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
-          <p className="mt-4 text-gray-600">Checking authentication...</p>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <>
@@ -193,29 +150,11 @@ function Addaddress() {
           Add Shipping <span className="font-semibold text-primary">Address</span>
         </p>
 
-        {user && user._id ? (
+        {user && (
           <div className="mt-4 p-3 bg-blue-50 rounded">
             <p className="text-sm text-blue-700">
-              ✅ Logged in as: <strong>{user.email || user.name}</strong>
+              Logged in as: {user.email || user.name} | User ID: {user._id ? user._id : 'Not available'}
             </p>
-            <p className="text-xs text-blue-600 mt-1">
-              User ID: <code className="bg-blue-100 px-2 py-1 rounded">{user._id}</code>
-            </p>
-            <p className="text-xs text-blue-600 mt-1">
-              Token: {localStorage.getItem('token') ? '✅ Available' : '❌ Not available'}
-            </p>
-          </div>
-        ) : (
-          <div className="mt-4 p-3 bg-red-50 rounded">
-            <p className="text-sm text-red-700">
-              ❌ Not logged in. Please login to add address.
-            </p>
-            <button 
-              onClick={() => navigate('/login')}
-              className="mt-2 px-4 py-2 bg-primary text-white text-sm rounded hover:bg-primary-dull"
-            >
-              Go to Login
-            </button>
           </div>
         )}
 
@@ -308,12 +247,6 @@ function Addaddress() {
               >
                 {loading ? 'Adding Address...' : 'Save Address'}
               </button>
-              
-              {(!user || !user._id) && (
-                <p className="text-sm text-red-500 text-center">
-                  Please login to save address
-                </p>
-              )}
             </form>
           </div>
 
