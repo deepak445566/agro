@@ -23,7 +23,7 @@ await connectCloudinary();
 const allowedOrigins = [
   'https://agro-gamma-one.vercel.app',
   'http://localhost:5173',
-
+  'http://localhost:3000'
 ];
 
 app.use(cors({

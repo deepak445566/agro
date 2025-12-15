@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 import axios from "axios";
 
 // Axios configuration for Vercel
-const API_BASE_URL = import.meta.env.VITE_BACKEND_URL || "https://agro-3ztp.onrender.com";
+const API_BASE_URL = import.meta.env.VITE_BACKEND_URL || "https://your-backend-url.vercel.app";
 
 axios.defaults.baseURL = API_BASE_URL;
 axios.defaults.withCredentials = true;
