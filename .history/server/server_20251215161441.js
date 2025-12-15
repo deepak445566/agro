@@ -64,7 +64,13 @@ app.use('/api/cart', cartRouter);
 app.use('/api/address', addressRouter);
 app.use('/api/order', orderRouter);
 
-
+// 404 handler - FIXED ROUTE PATTERN
+app.use('*', (req, res) => {
+  res.status(404).json({
+    success: false,
+    message: `Route ${req.originalUrl} not found`
+  });
+});
 
 // Error handling middleware
 app.use((err, req, res, next) => {
