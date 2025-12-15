@@ -36,7 +36,7 @@ try {
 const allowedOrigins = [
   'https://agro-gamma-one.vercel.app',
   'http://localhost:5173',
-
+  'http://localhost:3000'
 ];
 
 app.use(cors({
@@ -57,7 +57,7 @@ app.use(cors({
 }));
 
 // Handle preflight requests
-
+app.options('*', cors());
 
 // Middleware
 app.use(express.json({ limit: '50mb' }));
