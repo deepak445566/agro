@@ -34,7 +34,7 @@ try {
 
 // CORS configuration - FIXED
 const allowedOrigins = [
-  'https://agro-gamma-one.vercel.app',
+  'https://agro-gamma-one.vercel.app/',
   'http://localhost:5173',
 ];
 
@@ -57,7 +57,8 @@ app.use(cors({
   exposedHeaders: ['Set-Cookie', 'Date']
 }));
 
-
+// Handle preflight requests
+app.options('*', cors());
 
 // Middleware
 app.use(express.json({ limit: '50mb' }));

@@ -41,19 +41,15 @@ export const registerUser = async (req, res) => {
       { expiresIn: "7d" }
     );
 
-    // 6. Set cookie - FIXED DOMAIN
-    const cookieOptions = {
+    // 6. Set cookie - Production settings
+    res.cookie("token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
       maxAge: 7 * 24 * 60 * 60 * 1000,
       path: "/",
-    };
-    
-    // Don't set domain for cross-domain cookies
-    // Let the browser handle it
-
-    res.cookie("token", token, cookieOptions);
+      ...(process.env.NODE_ENV === "production" && { domain: ".vercel.app" })
+    });
 
     // 7. Response
     return res.status(201).json({
@@ -64,7 +60,7 @@ export const registerUser = async (req, res) => {
         email: user.email,
         name: user.name,
       },
-      token: token // Send token in response for debugging
+      token: token // Send token in response too for debugging
     });
   } catch (error) {
     console.error("Register error:", error.message);
@@ -113,16 +109,15 @@ export const loginUser = async (req, res) => {
       { expiresIn: "7d" }
     );
 
-    // 5. Set cookie - FIXED
-    const cookieOptions = {
+    // 5. Set cookie
+    res.cookie("token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
       maxAge: 7 * 24 * 60 * 60 * 1000,
       path: "/",
-    };
-
-    res.cookie("token", token, cookieOptions);
+      ...(process.env.NODE_ENV === "production" && { domain: ".vercel.app" })
+    });
 
     // 6. Response
     return res.json({
@@ -133,7 +128,8 @@ export const loginUser = async (req, res) => {
         email: user.email,
         name: user.name,
         cartItems: user.cartItems || {}
-      }
+      },
+      token: token // For debugging
     });
   } catch (error) {
     console.error("Login error:", error.message);
@@ -147,36 +143,21 @@ export const loginUser = async (req, res) => {
 // ================== Check Auth ==================
 export const isAuth = async (req, res) => {
   try {
-    console.log("=== isAuth Endpoint Hit ===");
-    console.log("Origin:", req.headers.origin);
-    console.log("Cookies received:", req.cookies);
-    console.log("Auth header:", req.headers.authorization);
+    console.log("isAuth endpoint hit - Cookies:", req.cookies);
+    console.log("Headers:", req.headers);
     
-    // Try multiple ways to get token
-    let token = req.cookies?.token;
-    
-    if (!token && req.headers.authorization) {
-      token = req.headers.authorization.replace('Bearer ', '');
-    }
-    
-    console.log("Token found:", !!token);
+    const token = req.cookies.token || req.headers.authorization?.replace('Bearer ', '');
     
     if (!token) {
+      console.log("No token found");
       return res.status(200).json({ 
         success: false, 
         message: "No authentication token found",
-        isAuthenticated: false,
-        debug: {
-          cookiesPresent: !!req.cookies?.token,
-          authHeaderPresent: !!req.headers.authorization
-        }
+        isAuthenticated: false 
       });
     }
 
-    // Verify token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    console.log("Token decoded for user:", decoded.id);
-    
     const user = await User.findById(decoded.id).select("-password");
 
     if (!user) {
@@ -218,8 +199,7 @@ export const isAuth = async (req, res) => {
     return res.status(200).json({ 
       success: false, 
       message: "Authentication check failed",
-      isAuthenticated: false,
-      error: error.message 
+      isAuthenticated: false 
     });
   }
 };
@@ -227,14 +207,13 @@ export const isAuth = async (req, res) => {
 // ================== Logout User ==================
 export const logout = async (req, res) => {
   try {
-    const cookieOptions = {
+    res.clearCookie("token", {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
       path: "/",
-    };
-    
-    res.clearCookie("token", cookieOptions);
+      ...(process.env.NODE_ENV === "production" && { domain: ".vercel.app" })
+    });
 
     return res.json({
       success: true,
@@ -249,3 +228,27 @@ export const logout = async (req, res) => {
   }
 };
 
+// ================== Get User Profile ==================
+export const getUserProfile = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id).select("-password");
+    
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found"
+      });
+    }
+
+    return res.json({
+      success: true,
+      user
+    });
+  } catch (error) {
+    console.error("Get profile error:", error.message);
+    res.status(500).json({ 
+      success: false, 
+      message: "Server error" 
+    });
+  }
+};

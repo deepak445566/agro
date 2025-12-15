@@ -249,3 +249,4 @@ export const logout = async (req, res) => {
   }
 };
 
+// Rest of the code remains same...

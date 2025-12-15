@@ -57,7 +57,8 @@ app.use(cors({
   exposedHeaders: ['Set-Cookie', 'Date']
 }));
 
-
+// Handle preflight requests
+app.options('*', cors());
 
 // Middleware
 app.use(express.json({ limit: '50mb' }));
