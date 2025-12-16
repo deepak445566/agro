@@ -42,7 +42,27 @@ export const AppContextProvider = ({ children }) => {
   }
 }
 
-
+// Seller login function (optional, if needed in context)
+const sellerLogin = async (email, password) => {
+  try {
+    const { data } = await axios.post("/api/seller/login", {
+      email,
+      password
+    });
+    
+    if (data.success) {
+      setIsSeller(true);
+      toast.success("Seller login successful");
+      return { success: true };
+    } else {
+      toast.error(data.message || "Login failed");
+      return { success: false, message: data.message };
+    }
+  } catch (error) {
+    toast.error(error.response?.data?.message || error.message);
+    return { success: false, message: error.message };
+  }
+};
 
 
 
