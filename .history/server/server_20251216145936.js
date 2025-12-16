@@ -22,7 +22,7 @@ await connectCloudinary();
 // Simple CORS configuration
 
 app.use(cors({
-  origin: "https://www.kuntalagro.com",
+  origin: "https://agro-gamma-one.vercel.app",
   credentials: true,
   allowedHeaders: ["Content-Type", "Authorization"]
 }));
