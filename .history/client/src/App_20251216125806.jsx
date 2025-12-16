@@ -22,7 +22,6 @@ import TermsAndConditions from './pages/Term';
 import ReturnRefundPolicy from './pages/Return';
 import PrivacyPolicy from './pages/Policy';
 
-
 function App() {
 
   const isSellerPath = useLocation().pathname.includes("seller");
@@ -48,7 +47,7 @@ const {showLogin,isSeller} =useAppContext();
 
 <Route path="/term" element={<TermsAndConditions/>}/>
 <Route path="/return" element={<ReturnRefundPolicy/>}/>
-<Route path='/policy' element={<PrivacyPolicy/>}/>
+<Route path='/Policy' element={<PrivacyPolicy/>}/>
 
 
 

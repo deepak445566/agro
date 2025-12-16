@@ -134,9 +134,9 @@ export const footerLinks = [
   {
     title: "Need help?",
     links: [
-      { text: "Term & condition", url: "/term" },
-      { text: "Return & Refund Policy", url: "/return" },
-      { text: "Privacy policy", url: "/policy" },
+      { text: "Term & condition", url: "#" },
+      { text: "Return & Refund Policy", url: "#" },
+      { text: "Privacy policy", url: "#" },
  
     ],
   },

@@ -20,7 +20,6 @@ import Order from './pages/seller/Order';
 import Loading from './components/Loading';
 import TermsAndConditions from './pages/Term';
 import ReturnRefundPolicy from './pages/Return';
-import PrivacyPolicy from './pages/Policy';
 
 
 function App() {
@@ -48,7 +47,7 @@ const {showLogin,isSeller} =useAppContext();
 
 <Route path="/term" element={<TermsAndConditions/>}/>
 <Route path="/return" element={<ReturnRefundPolicy/>}/>
-<Route path='/policy' element={<PrivacyPolicy/>}/>
+<Route path='/policy' element={<Priv/>}/>
 
 
 

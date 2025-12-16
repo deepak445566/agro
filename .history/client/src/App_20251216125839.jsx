@@ -22,7 +22,6 @@ import TermsAndConditions from './pages/Term';
 import ReturnRefundPolicy from './pages/Return';
 import PrivacyPolicy from './pages/Policy';
 
-
 function App() {
 
   const isSellerPath = useLocation().pathname.includes("seller");

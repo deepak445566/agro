@@ -136,7 +136,7 @@ export const footerLinks = [
     links: [
       { text: "Term & condition", url: "/term" },
       { text: "Return & Refund Policy", url: "/return" },
-      { text: "Privacy policy", url: "/policy" },
+      { text: "Privacy policy", url: "#" },
  
     ],
   },
