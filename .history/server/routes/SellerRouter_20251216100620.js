@@ -1,14 +1,12 @@
 import express from "express";
 
-
-
 import authSeller from "../middlewares/authSeller.js";
-import { isSellerAuth, sellerLogin, sellerLogout } from "../controllers/SellerController.js";
+import {SellerLogin,isSellerAuth} from "../../client/src/components/seller/SellerLogin.jsx";
 
 const sellerRouter = express.Router();
 
 // Public routes
-sellerRouter.post("/login", sellerLogin); // Seller login route (public)
+sellerRouter.post("/login", SellerLogin); // Seller login route (public)
 sellerRouter.get("/isauth", isSellerAuth); // Check auth status (public - NO middleware here!)
 
 // Protected routes (require seller authentication)
