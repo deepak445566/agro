@@ -22,7 +22,7 @@ await connectCloudinary();
 // Simple CORS configuration
 
 app.use(cors({
-  origin: "https://agro-gamma-one.vercel.app",
+  origin: "https://mellow-clafoutis-9964d1.netlify.app",
   credentials: true,
   allowedHeaders: ["Content-Type", "Authorization"]
 }));
