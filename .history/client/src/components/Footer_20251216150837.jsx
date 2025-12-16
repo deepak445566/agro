@@ -26,7 +26,7 @@ function Footer() {
                 </div>
             </div>
             <p className="py-4 text-center text-sm md:text-base text-gray-500/80">
-                Copyright 2025 © <a href="https://prebuiltui.com">KuntalAgro</a> All Right Reserved.
+                Copyright 2025 © <a href="https://prebuiltui.com">Kuntal</a> All Right Reserved.
             </p>
         </div>
     
