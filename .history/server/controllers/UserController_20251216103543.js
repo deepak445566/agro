@@ -167,7 +167,7 @@ export const isAuth = async (req, res) => {
 // ================== Logout User ==================
 export const logout = async (req, res) => {
   try {
-     res.clearCookie("token", {
+     res.clearCookie("sellerToken", {
       httpOnly: true,
       secure: true,
       sameSite: "none",
