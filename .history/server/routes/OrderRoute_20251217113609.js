@@ -5,7 +5,7 @@ import authSeller from "../middlewares/authSeller.js";
 import authUser from "../middlewares/authUser.js";
 
 const orderRouter = express.Router();
-orderRouter.post('/place', authUser,placeOrderOnline);
+orderRouter.post('/', authUser,placeOrderOnline);
 orderRouter.get('/user',authUser,getUserOrders);
 orderRouter.get('/seller', authSeller, getAllOrders);
 
