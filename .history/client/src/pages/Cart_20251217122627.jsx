@@ -243,7 +243,7 @@ const Cart = () => {
           <img
             src="/qr.jpg"
             alt="Secure Payment"
-            className="w-60 h-70 mx-auto "
+            className="w-70 h-60 mx-auto "
           />
           <p className="text-xs text-gray-500 mt-1">100% Secure Online Payment</p>
         </div>
