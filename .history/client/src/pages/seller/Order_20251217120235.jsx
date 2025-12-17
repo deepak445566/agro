@@ -104,7 +104,7 @@ function Order() {
                   </div>
 
                   <p className="font-bold text-lg text-gray-800 flex items-center gap-1">
-                  ₹
+                    <DollarSign className="w-4 h-4" />
                     {order.amount || 0}
                   </p>
 
@@ -174,7 +174,7 @@ function Order() {
                 </div>
                 <div>
                   <p className="text-sm text-gray-500">Total Amount</p>
-                  <p className="font-bold text-2xl text-gray-800">₹{selectedOrder.amount || 0}</p>
+                  <p className="font-bold text-2xl text-gray-800">${selectedOrder.amount || 0}</p>
                 </div>
               </div>
 
@@ -278,10 +278,10 @@ function Order() {
                         </div>
                       </div>
                       <div className="text-right">
-                        <p className="font-bold text-gray-800">₹{item?.product?.price || 0}</p>
+                        <p className="font-bold text-gray-800">${item?.product?.price || 0}</p>
                         <p className="text-gray-600">Qty: {item?.quantity || 0}</p>
                         <p className="font-bold text-green-600">
-                          Total: ₹{((item?.product?.price || 0) * (item?.quantity || 0)).toFixed(2)}
+                          Total: ${((item?.product?.price || 0) * (item?.quantity || 0)).toFixed(2)}
                         </p>
                       </div>
                     </div>
@@ -292,15 +292,15 @@ function Order() {
                 <div className="bg-gray-50 p-4 rounded-lg">
                   <div className="flex justify-between items-center border-b border-gray-200 pb-2 mb-2">
                     <span className="text-gray-600">Subtotal</span>
-                    <span className="font-bold">₹{selectedOrder.amount || 0}</span>
+                    <span className="font-bold">${selectedOrder.amount || 0}</span>
                   </div>
                   <div className="flex justify-between items-center border-b border-gray-200 pb-2 mb-2">
                     <span className="text-gray-600">Shipping</span>
-                    <span className="font-bold">₹0.00</span>
+                    <span className="font-bold">$0.00</span>
                   </div>
                   <div className="flex justify-between items-center border-b border-gray-200 pb-2 mb-2">
                     <span className="text-gray-600">Tax (5%)</span>
-                    <span className="font-bold">₹{((selectedOrder.amount || 0) * 0.05).toFixed(2)}</span>
+                    <span className="font-bold">${((selectedOrder.amount || 0) * 0.05).toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between items-center pt-2">
                     <span className="text-lg font-bold text-gray-800">Total</span>

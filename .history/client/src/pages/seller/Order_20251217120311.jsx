@@ -104,7 +104,7 @@ function Order() {
                   </div>
 
                   <p className="font-bold text-lg text-gray-800 flex items-center gap-1">
-                  ₹
+                    <DollarSign className="w-4 h-4" />
                     {order.amount || 0}
                   </p>
 
@@ -174,7 +174,7 @@ function Order() {
                 </div>
                 <div>
                   <p className="text-sm text-gray-500">Total Amount</p>
-                  <p className="font-bold text-2xl text-gray-800">₹{selectedOrder.amount || 0}</p>
+                  <p className="font-bold text-2xl text-gray-800">${selectedOrder.amount || 0}</p>
                 </div>
               </div>
 
