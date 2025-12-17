@@ -85,7 +85,55 @@ export const placeOrderOnline = async (req, res) => {
   }
 };
 
+// ✅ COD ke liye - userId body se aayega (existing code)
+export const placeOrderCOD = async (req, res) => {
+  try {
+    const { userId, items, address } = req.body;
+    if (!address || items.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: "Address not provided",
+      });
+    }
 
+    // Calculate amount
+    let amount = 0;
+    for (const item of items) {
+      const product = await Product.findById(item.product);
+      if (!product) {
+        return res.status(400).json({
+          success: false,
+          message: `Product ${item.product} not found`,
+        });
+      }
+      amount += (product.offerPrice || product.price) * item.quantity;
+    }
+
+    amount += Math.floor(amount * 0.05);
+    
+    const order = await Order.create({
+      userId,
+      items,
+      amount,
+      address,
+      paymentType: "COD",
+      isPaid: false,
+      transactionId: "" // COD ke liye empty
+    });
+    
+    return res.status(201).json({
+      success: true,
+      message: "Order placed successfully",
+      orderId: order._id
+    });
+  } catch (error) {
+    console.error("COD Order error:", error);
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
 
 // ✅ Get user orders - userId auth se aayega
 export const getUserOrders = async(req, res)=>{
