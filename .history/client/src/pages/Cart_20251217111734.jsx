@@ -207,7 +207,7 @@ if(user){
                     <img 
                         src="/pr1.jpg" // apne assets se secure payment icon ya koi aur relevant image
                         alt="Secure Payment" 
-                        className="w-60 h-60 mx-auto opacity-70"
+                        className="w-30 h-0 mx-auto opacity-70"
                     />
                     <p className="text-xs text-gray-500 mt-1">100% Secure Payment</p>
                 </div>
