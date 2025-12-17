@@ -12,7 +12,7 @@ function MainBanner() {
         className="w-full hidden md:block"
       />
       <img
-        src="/mn.avif"
+        src=/main1.png
         alt="Main banner mobile"
         className="w-full md:hidden"
       />
@@ -22,7 +22,7 @@ function MainBanner() {
        
 
         {/* Buttons */}
-        <div className="lg:mt-66 -mt-40 flex flex-col md:flex-row items-center  md:justify-start gap-4">
+        <div className="mt-66 flex flex-col md:flex-row items-center  md:justify-start gap-4">
           <Link
             to="/products"
             className="flex items-center gap-2 px-7 py-3 bg-green-500 hover:bg-green-600 text-white rounded-md transition"
