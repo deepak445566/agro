@@ -205,7 +205,7 @@ if(user){
                 {/* Image above place order button */}
                 <div className="mt-4 mb-2 text-center">
                     <img 
-                        src="/pr1.jpg" // apne assets se secure payment icon ya koi aur relevant image
+                        src="pr1" // apne assets se secure payment icon ya koi aur relevant image
                         alt="Secure Payment" 
                         className="w-16 h-16 mx-auto opacity-70"
                     />
