@@ -1,6 +1,6 @@
 import express from "express";
 
-import { getAllOrders, getUserOrders,  placeOrderOnline } from "../controllers/OrderController.js";
+import { getAllOrders, getUserOrders, placeOrderCOD, placeOrderOnline } from "../controllers/OrderController.js";
 import authSeller from "../middlewares/authSeller.js";
 import authUser from "../middlewares/authUser.js";
 
