@@ -99,7 +99,7 @@ export const deleteProduct = async (req, res) => {
   }
 };
 
-
+// Update product: /api/product/update
 export const updateProduct = async (req, res) => {
   try {
     const productData = req.body.productData ? JSON.parse(req.body.productData) : {};
