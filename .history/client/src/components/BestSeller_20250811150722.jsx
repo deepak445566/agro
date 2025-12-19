@@ -9,7 +9,7 @@ function BestSeller() {
     <div className="mt-10">
       {/* Heading */}
       <p className="text-2xl md:text-3xl font-semibold mb-4">
-        Best Products
+        Best Seller
       </p>
 
       {/* Products Grid */}
