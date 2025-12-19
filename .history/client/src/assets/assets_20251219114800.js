@@ -135,9 +135,9 @@ export const footerLinks = [
   {
     title: "Follow Us",
     links: [
-      { text: "Instagram", url: "https://www.instagram.com/kuntalagroexpert?igsh=b2MyMjRoMnVoa2Q=" },
-    
-      { text: "Facebook", url: "https://www.facebook.com/share/1Bixr7msU4/" },
+      { text: "Instagram", url: "" },
+      { text: "Twitter", url: "#" },
+      { text: "Facebook", url: "#" },
       { text: "YouTube", url: "https://youtube.com/@kuntalagroexperts?si=Q0dwg80979FnKLTj" },
     ],
   },

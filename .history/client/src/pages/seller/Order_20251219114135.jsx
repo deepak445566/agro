@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { assets } from '../../assets/assets';
 import { useAppContext } from '../../context/AppContext';
 import toast from 'react-hot-toast';
-import { X, Package, User, MapPin, Calendar, Hash, CheckCircle, Tag, Layers } from 'lucide-react';
+import { X, Package, User, MapPin, Calendar, CreditCard, DollarSign, CheckCircle, Clock, Hash, ShoppingBag } from 'lucide-react';
 
 function Order() {
   const [orders, setOrders] = useState([]);
@@ -38,64 +38,26 @@ function Order() {
     setSelectedOrder(null);
   };
 
-  // Function to get color based on category
-  const getCategoryColor = (category) => {
-    const colorMap = {
-      "Crop": "bg-green-50 text-green-800 border-green-200",
-      "Fertilizer": "bg-blue-50 text-blue-800 border-blue-200",
-      "Pesticide": "bg-red-50 text-red-800 border-red-200",
-      "Household Items": "bg-purple-50 text-purple-800 border-purple-200",
-      "Sprayers": "bg-amber-50 text-amber-800 border-amber-200",
-      "Sprayers Parts": "bg-cyan-50 text-cyan-800 border-cyan-200",
-      "Terrace Gardening": "bg-emerald-50 text-emerald-800 border-emerald-200",
-      "Household Insecticides": "bg-orange-50 text-orange-800 border-orange-200",
-      "Farm Machinery": "bg-gray-100 text-gray-800 border-gray-300",
-      "Plantation": "bg-lime-50 text-lime-800 border-lime-200"
+  // Function to safely access product data
+  const getProductData = (item) => {
+    if (!item) return null;
+    
+    // Check multiple possible paths for product data
+    const product = item.product || item.productId || item;
+    
+    return {
+      _id: product?._id || 'N/A',
+      name: product?.name || 'Unknown Product',
+      price: product?.price || product?.offerPrice || 0,
+      image: product?.image?.[0] || assets.default_product,
+      quantity: item?.quantity || 1
     };
-    
-    return colorMap[category] || "bg-gray-100 text-gray-800 border-gray-300";
   };
 
-  // Function to get subcategory color
-  const getSubCategoryColor = (category, subCategory) => {
-    if (category === "Fertilizer") {
-      if (subCategory === "Organic") return "bg-green-100 text-green-900 border-green-300";
-      if (subCategory === "Non-organic") return "bg-yellow-100 text-yellow-900 border-yellow-300";
-    }
-    
-    if (category === "Crop") {
-      if (subCategory === "Field Crop") return "bg-teal-100 text-teal-900 border-teal-300";
-      if (subCategory === "Vegetable Crop") return "bg-emerald-100 text-emerald-900 border-emerald-300";
-    }
-    
-    if (category === "Pesticide") {
-      if (subCategory === "Herbicides") return "bg-red-100 text-red-900 border-red-300";
-      if (subCategory === "Insecticides") return "bg-orange-100 text-orange-900 border-orange-300";
-      if (subCategory === "Fungicides") return "bg-purple-100 text-purple-900 border-purple-300";
-    }
-    
-    return "bg-gray-100 text-gray-800 border-gray-300";
-  };
-
-  // Function to get emoji for subcategory
-  const getSubCategoryEmoji = (category, subCategory) => {
-    if (category === "Fertilizer") {
-      if (subCategory === "Organic") return "🌱";
-      if (subCategory === "Non-organic") return "⚗️";
-    }
-    
-    if (category === "Crop") {
-      if (subCategory === "Field Crop") return "🌾";
-      if (subCategory === "Vegetable Crop") return "🥦";
-    }
-    
-    if (category === "Pesticide") {
-      if (subCategory === "Herbicides") return "🚫";
-      if (subCategory === "Insecticides") return "🐛";
-      if (subCategory === "Fungicides") return "🍄";
-    }
-    
-    return "";
+  // Function to calculate item total
+  const calculateItemTotal = (item) => {
+    const product = getProductData(item);
+    return (product.price * product.quantity).toFixed(2);
   };
 
   if (loading) {
@@ -127,49 +89,46 @@ function Order() {
             <div className="space-y-4">
               {orders.map((order, index) => (
                 <div 
-                  key={index} 
+                  key={order._id || index} 
                   onClick={() => handleOrderClick(order)}
                   className="flex flex-col md:flex-row md:items-center justify-between gap-5 p-5 max-w-4xl rounded-lg border border-gray-200 hover:border-green-300 hover:shadow-md transition-all duration-200 cursor-pointer bg-white"
                 >
-                  <div className="flex gap-5">
+                  <div className="flex gap-5 items-center">
                     <div className="relative">
                       <Package className="w-12 h-12 text-green-600" />
                       {order.isPaid && (
                         <CheckCircle className="absolute -top-1 -right-1 w-5 h-5 text-green-500 bg-white rounded-full" />
                       )}
                     </div>
-                    <div className="space-y-2">
-                      {order.items && order.items.map((item, itemIndex) => {
-                        const hasSubcategory = ["Crop", "Fertilizer", "Pesticide"].includes(item?.product?.category);
-                        
-                        return (
-                          <div key={itemIndex} className="flex flex-col gap-1 mb-3 last:mb-0">
-                            <p className="font-medium text-gray-800">
-                              {item?.product?.name || 'Unknown Product'} 
-                              <span className={`text-green-600 ml-2 ${(!item?.quantity || item.quantity < 2) && "hidden"}`}>
-                                x {item?.quantity || 0}
-                              </span>
-                            </p>
-                            
-                            {/* Category and Subcategory Badges */}
-                            {item?.product?.category && (
-                              <div className="flex flex-wrap items-center gap-1">
-                                <span className={`px-2 py-0.5 rounded text-xs font-medium ${getCategoryColor(item.product.category)}`}>
-                                  <Tag className="inline w-3 h-3 mr-1" />
-                                  {item.product.category}
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-2">
+                        <ShoppingBag className="w-4 h-4 text-gray-500" />
+                        <p className="text-sm font-semibold text-gray-700">
+                          {order.items?.length || 0} Item{order.items?.length !== 1 ? 's' : ''}
+                        </p>
+                      </div>
+                      <div className="max-w-md">
+                        {order.items && order.items.length > 0 ? (
+                          order.items.slice(0, 2).map((item, itemIndex) => {
+                            const product = getProductData(item);
+                            return (
+                              <div key={itemIndex} className="text-gray-800 font-medium">
+                                • {product.name} 
+                                <span className="text-gray-500 ml-2">
+                                  (Qty: {product.quantity})
                                 </span>
-                                
-                                {hasSubcategory && item?.product?.subCategory && (
-                                  <span className={`px-2 py-0.5 rounded text-xs font-medium ${getSubCategoryColor(item.product.category, item.product.subCategory)}`}>
-                                    <Layers className="inline w-3 h-3 mr-1" />
-                                    {getSubCategoryEmoji(item.product.category, item.product.subCategory)} {item.product.subCategory}
-                                  </span>
-                                )}
                               </div>
-                            )}
-                          </div>
-                        );
-                      })}
+                            );
+                          })
+                        ) : (
+                          <p className="text-yellow-600 font-medium">No items in this order</p>
+                        )}
+                        {order.items && order.items.length > 2 && (
+                          <p className="text-gray-500 text-sm mt-1">
+                            +{order.items.length - 2} more items
+                          </p>
+                        )}
+                      </div>
                     </div>
                   </div>
 
@@ -287,97 +246,50 @@ function Order() {
                 </div>
               </div>
 
-              {/* Order Items Section with Category/Subcategory */}
+              {/* Order Items Section */}
               <div className="space-y-4">
                 <h4 className="text-lg font-bold text-gray-800 flex items-center gap-2">
-                  <Package className="w-5 h-5" />
+                  <ShoppingBag className="w-5 h-5" />
                   Order Items ({selectedOrder.items?.length || 0})
                 </h4>
                 
                 {selectedOrder.items && selectedOrder.items.length > 0 ? (
                   <div className="space-y-4">
                     {selectedOrder.items.map((item, index) => {
-                      const hasSubcategory = ["Crop", "Fertilizer", "Pesticide"].includes(item?.product?.category);
-                      const itemTotal = ((item?.product?.price || 0) * (item?.quantity || 0)).toFixed(2);
+                      const product = getProductData(item);
+                      const itemTotal = calculateItemTotal(item);
                       
                       return (
-                        <div key={index} className="bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
-                          <div className="p-4">
-                            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                              <div className="flex items-start gap-4 flex-1">
-                                <div className="w-16 h-16 bg-white border border-gray-200 rounded-lg flex-shrink-0 overflow-hidden">
-                                  <img 
-                                    src={item?.product?.image?.[0] || assets.default_product} 
-                                    alt={item?.product?.name}
-                                    className="w-full h-full object-cover"
-                                  />
-                                </div>
-                                <div className="space-y-2 flex-1">
-                                  <div>
-                                    <p className="font-bold text-gray-800 text-lg">{item?.product?.name || 'Unknown Product'}</p>
-                                    <p className="text-sm text-gray-500">
-                                      Product ID: {item?.product?._id?.slice(-8) || 'N/A'}
-                                    </p>
-                                  </div>
-                                  
-                                  {/* Category and Subcategory Badges */}
-                                  {item?.product?.category && (
-                                    <div className="flex flex-wrap items-center gap-2">
-                                      <div className="flex items-center gap-1">
-                                        <Tag className="w-3 h-3 text-gray-500" />
-                                        <span className={`px-2 py-1 rounded text-xs font-medium ${getCategoryColor(item.product.category)}`}>
-                                          {item.product.category}
-                                        </span>
-                                      </div>
-                                      
-                                      {hasSubcategory && item?.product?.subCategory && (
-                                        <div className="flex items-center gap-1">
-                                          <Layers className="w-3 h-3 text-gray-500" />
-                                          <span className={`px-2 py-1 rounded text-xs font-medium ${getSubCategoryColor(item.product.category, item.product.subCategory)}`}>
-                                            {getSubCategoryEmoji(item.product.category, item.product.subCategory)} {item.product.subCategory}
-                                          </span>
-                                        </div>
-                                      )}
-                                    </div>
-                                  )}
-                                </div>
-                              </div>
-                              
-                              <div className="text-right space-y-2 min-w-[120px]">
-                                <div>
-                                  <p className="text-sm text-gray-500">Unit Price</p>
-                                  <p className="font-bold text-gray-800">₹{item?.product?.price || 0}</p>
-                                </div>
-                                <div>
-                                  <p className="text-sm text-gray-500">Quantity</p>
-                                  <p className="font-bold text-gray-800">{item?.quantity || 0}</p>
-                                </div>
-                                <div>
-                                  <p className="text-sm text-gray-500">Item Total</p>
-                                  <p className="font-bold text-green-600 text-xl">₹{itemTotal}</p>
-                                </div>
+                        <div key={index} className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 bg-gray-50 rounded-lg gap-4">
+                          <div className="flex items-start gap-4 flex-1">
+                            <div className="w-16 h-16 bg-white border border-gray-200 rounded-lg flex-shrink-0">
+                              <img 
+                                src={product.image} 
+                                alt={product.name}
+                                className="w-full h-full object-cover rounded-lg"
+                              />
+                            </div>
+                            <div className="space-y-1">
+                              <p className="font-bold text-gray-800 text-lg">{product.name}</p>
+                              <div className="flex flex-wrap gap-4 text-sm">
+                                <p className="text-gray-600">
+                                  <span className="font-medium">Product ID:</span> {product._id?.slice(-8) || 'N/A'}
+                                </p>
+                                <p className="text-gray-600">
+                                  <span className="font-medium">Quantity:</span> {product.quantity}
+                                </p>
                               </div>
                             </div>
                           </div>
                           
-                          {/* Product Details Summary */}
-                          <div className="bg-gray-100 px-4 py-3 border-t border-gray-200">
-                            <div className="flex flex-wrap items-center justify-between text-sm">
-                              <div className="flex items-center gap-4">
-                                {item?.product?.category && (
-                                  <span className="text-gray-600">
-                                    Category: <span className="font-medium">{item.product.category}</span>
-                                  </span>
-                                )}
-                                {item?.product?.subCategory && (
-                                  <span className="text-gray-600">
-                                    Subcategory: <span className="font-medium">{item.product.subCategory}</span>
-                                  </span>
-                                )}
-                              </div>
-                              <div className="text-gray-600">
-                                Item Total: <span className="font-bold text-green-700">₹{itemTotal}</span>
-                              </div>
+                          <div className="text-right space-y-2">
+                            <div>
+                              <p className="text-sm text-gray-500">Unit Price</p>
+                              <p className="font-bold text-gray-800">₹{product.price}</p>
+                            </div>
+                            <div>
+                              <p className="text-sm text-gray-500">Item Total</p>
+                              <p className="font-bold text-green-600 text-xl">₹{itemTotal}</p>
                             </div>
                           </div>
                         </div>
@@ -411,8 +323,9 @@ function Order() {
                   </div>
                 ) : (
                   <div className="text-center p-8 bg-yellow-50 border border-yellow-200 rounded-lg">
-                    <Package className="w-12 h-12 text-yellow-500 mx-auto mb-3" />
+                    <ShoppingBag className="w-12 h-12 text-yellow-500 mx-auto mb-3" />
                     <p className="text-yellow-700 font-medium">No items found in this order</p>
+                    <p className="text-yellow-600 text-sm mt-1">Please check the backend data structure</p>
                   </div>
                 )}
               </div>
