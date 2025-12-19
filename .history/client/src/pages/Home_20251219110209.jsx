@@ -7,14 +7,13 @@ import BottomBanner from '../components/BottomBanner'
 import NewsLetter from '../components/NewsLetter'
 import OurStory from '../components/OurStory'
 import Reviews from '../components/Reviews'
-import Categories from '../components/Categories'
 
 export default function() {
   return (
    <>
    <div className='mt-10'>
     <MainBanner/>
- <Categories/>
+ <Category
     <BestSeller/>
     <OurStory/>
    <Reviews/>
