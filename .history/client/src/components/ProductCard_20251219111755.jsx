@@ -87,13 +87,13 @@ function ProductCard({ product }) {
       </div>
 
       {/* Category/Subcategory - Image के नीचे */}
-      <div className="mt-2 mb-2 ">
+      <div className="mt-2 mb-2 f">
         {hasSubcategory && product.subCategory ? (
-          <div className="flex items-center gap-1 ">
+          <div className="flex items-center gap-1 flex-wrap">
             <span className={`px-2 py-1 rounded text-xs font-semibold ${getCategoryColor(product.category)}`}>
               {product.category}
             </span>
-          
+            <span className="text-gray-400 text-xs">→</span>
             <span className={`px-2 py-1 rounded text-xs font-semibold ${getSubCategoryColor(product.category, product.subCategory)}`}>
               {getSubCategoryEmoji(product.category, product.subCategory)} {product.subCategory}
             </span>

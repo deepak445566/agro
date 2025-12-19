@@ -93,7 +93,7 @@ function ProductCard({ product }) {
             <span className={`px-2 py-1 rounded text-xs font-semibold ${getCategoryColor(product.category)}`}>
               {product.category}
             </span>
-          
+            <span className="text-gray-400 text-xs">→</span>
             <span className={`px-2 py-1 rounded text-xs font-semibold ${getSubCategoryColor(product.category, product.subCategory)}`}>
               {getSubCategoryEmoji(product.category, product.subCategory)} {product.subCategory}
             </span>
