@@ -222,7 +222,13 @@ function Navbar() {
             </NavLink>
           )}
           
-         
+          <NavLink 
+            to="/contact" 
+            onClick={() => setOpen(false)}
+            className="w-full py-2 hover:text-primary transition"
+          >
+            Contact
+          </NavLink>
 
           {/* Mobile Search Bar */}
           <div className="w-full flex items-center gap-2 border border-gray-300 px-3 rounded-full mt-2">
