@@ -7,7 +7,7 @@ function MainBanner() {
     <div className="relative w-full">
       {/* Banner image */}
       <img
-        src="/la1.png"
+        src="/lo2.png"
         alt="Main banner"
         className="w-full hidden md:block"
       />

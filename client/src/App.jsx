@@ -40,6 +40,7 @@ const {showLogin,isSeller} =useAppContext();
     <Route path='/' element={<Home/>}/>
     <Route path='/products' element={<AllProduct/>}/>
     <Route path='/products/:category' element={<Productcato/>}/>
+     <Route path='/products/:category/:subcategory' element={<Productcato/>}/> {/* New subcategory route */}
     <Route path='/products/:category/:id' element={<ProductDetail/>}/>
   <Route path='/cart' element={<Cart/>}/>
   <Route path='/add-address' element={<Addaddress/>}/>
