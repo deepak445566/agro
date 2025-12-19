@@ -5,33 +5,37 @@ import { assets } from "../assets/assets";
 import ProductCard from "../components/ProductCard";
 
 const ProductDetail = () => {
-  const {products, navigate, currency, addToCart} = useAppContext();
-  const {id} = useParams();
+  const { products, navigate, currency, addToCart } = useAppContext();
+  const { id } = useParams();
   const [related, setRelated] = useState([]);
   const [thumbnail, setThumbnail] = useState(null);
+  const [showSubcategory, setShowSubcategory] = useState(false);
 
   const product = products.find((item) => item._id === id);
-  
+
   useEffect(() => {
     if (products.length > 0 && product) {
       let productcopy = products.slice();
-      
-      // Filter by both main category and subCategory if available
-      productcopy = productcopy.filter((item) => {
-        // Match by main category
-        if (product.category === item.category) {
-          // If product has subCategory, also match by subCategory
-          if (product.subCategory && item.subCategory) {
-            return product.subCategory === item.subCategory;
-          }
-          return true;
-        }
-        return false;
-      });
-      
+
+      // Check if product belongs to a category that has subcategories
+      // Main categories with subcategories: Crop, Fertilizer, Pesticide
+      const hasSubcategories = ["Crop", "Fertilizer", "Pesticide"].includes(product.category);
+      setShowSubcategory(hasSubcategories);
+
+      if (hasSubcategories && product.subCategory) {
+        // If product has subCategory, filter by both category AND subCategory
+        productcopy = productcopy.filter((item) => 
+          product.category === item.category && 
+          product.subCategory === item.subCategory
+        );
+      } else {
+        // Otherwise filter only by main category
+        productcopy = productcopy.filter((item) => product.category === item.category);
+      }
+
       // Remove current product from related
       productcopy = productcopy.filter((item) => item._id !== product._id);
-      
+
       setRelated(productcopy.slice(0, 5));
     }
   }, [products, product]);
@@ -43,13 +47,14 @@ const ProductDetail = () => {
   // Function to create breadcrumb path
   const getBreadcrumbPath = () => {
     if (!product) return "";
+
+    // Check if product belongs to a category that has subcategories
+    const hasSubcategories = ["Crop", "Fertilizer", "Pesticide"].includes(product.category);
     
-    // If product has subCategory, create path like: Category > SubCategory
-    if (product.subCategory) {
+    if (hasSubcategories && product.subCategory) {
       return `/products/${product.category.toLowerCase()}/${product.subCategory.toLowerCase()}`;
     }
-    
-    // Otherwise just use category
+
     return `/products/${product.category.toLowerCase()}`;
   };
 
@@ -60,8 +65,8 @@ const ProductDetail = () => {
         <Link to={"/"}>Home</Link> /
         <Link to={"/products"}> Products</Link> /
         <Link to={getBreadcrumbPath()}>
-          {product.subCategory 
-            ? `${product.category} > ${product.subCategory}` 
+          {product.subCategory && showSubcategory
+            ? `${product.category} > ${product.subCategory}`
             : product.category}
         </Link> /
         <span className="text-primary"> {product.name}</span>
@@ -87,12 +92,12 @@ const ProductDetail = () => {
         <div className="text-sm w-full md:w-1/2">
           <h1 className="text-3xl font-medium">{product.name}</h1>
 
-          {/* Category and Subcategory Display */}
+          {/* Category and Subcategory Display - Only show subcategory for specific categories */}
           <div className="mt-2 flex items-center gap-2 text-gray-600">
             <span className="bg-gray-100 px-3 py-1 rounded-full text-sm">
               Category: {product.category}
             </span>
-            {product.subCategory && (
+            {product.subCategory && showSubcategory && (
               <span className="bg-gray-100 px-3 py-1 rounded-full text-sm">
                 Subcategory: {product.subCategory}
               </span>
@@ -128,22 +133,24 @@ const ProductDetail = () => {
             ))}
           </ul>
 
-          {/* Category Information Display */}
-          <div className="mt-6 p-4 bg-gray-50 rounded-lg">
-            <p className="text-base font-medium mb-2">Product Category Information:</p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-              <div>
-                <span className="font-medium">Main Category: </span>
-                <span>{product.category}</span>
-              </div>
-              {product.subCategory && (
+          {/* Category Information Display - Only show for categories with subcategories */}
+          {showSubcategory && (
+            <div className="mt-6 p-4 bg-gray-50 rounded-lg">
+              <p className="text-base font-medium mb-2">Product Category Information:</p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                 <div>
-                  <span className="font-medium">Sub Category: </span>
-                  <span>{product.subCategory}</span>
+                  <span className="font-medium">Main Category: </span>
+                  <span>{product.category}</span>
                 </div>
-              )}
+                {product.subCategory && (
+                  <div>
+                    <span className="font-medium">Sub Category: </span>
+                    <span>{product.subCategory}</span>
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Action Buttons */}
           <div className="flex items-center mt-10 gap-4 text-base">
@@ -161,8 +168,8 @@ const ProductDetail = () => {
       <div className="flex flex-col items-center mt-20">
         <div className="flex flex-col items-center w-max">
           <p className="text-3xl font-medium">
-            {product.subCategory 
-              ? `More in ${product.subCategory}` 
+            {product.subCategory && showSubcategory
+              ? `More in ${product.subCategory}`
               : `More in ${product.category}`}
           </p>
         </div>
