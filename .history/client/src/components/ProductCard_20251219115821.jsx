@@ -97,7 +97,7 @@ function ProductCard({ product }) {
             </span>
           
             <span className={`px-2 py-1 rounded text-xs font-semibold ${getSubCategoryColor(product.category, product.subCategory)}`}>
-              { product.subCategory} {product.subCategory}
+              { product.subCategory)} {product.subCategory}
             </span>
           </div>
         ) : (
