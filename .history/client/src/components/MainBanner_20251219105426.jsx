@@ -12,7 +12,7 @@ function MainBanner() {
         className="w-full hidden md:block"
       />
       <img
-        src="/mo1.png"
+        src="/mn.avif"
         alt="Main banner mobile"
         className="w-full md:hidden"
       />
