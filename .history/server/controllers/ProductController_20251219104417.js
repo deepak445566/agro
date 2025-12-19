@@ -193,3 +193,38 @@ export const updateProduct = async (req, res) => {
 
 
 
+// ✅ NEW: Get all categories with subcategories
+export const getCategories = async (req, res) => {
+  try {
+    const products = await Product.find({});
+    
+    // Extract unique categories and subcategories
+    const categoryMap = {};
+    
+    products.forEach(product => {
+      if (!categoryMap[product.category]) {
+        categoryMap[product.category] = new Set();
+      }
+      if (product.subCategory) {
+        categoryMap[product.category].add(product.subCategory);
+      }
+    });
+    
+    // Convert to array format
+    const categories = Object.keys(categoryMap).map(category => ({
+      category,
+      subCategories: Array.from(categoryMap[category])
+    }));
+    
+    res.json({
+      success: true,
+      categories
+    });
+  } catch (error) {
+    console.log(error.message);
+    res.json({
+      success: false,
+      message: error.message
+    });
+  }
+};
