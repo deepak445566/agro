@@ -22,6 +22,7 @@ import TermsAndConditions from './pages/Term';
 import ReturnRefundPolicy from './pages/Return';
 import PrivacyPolicy from './pages/Policy';
 
+
 function App() {
   const isSellerPath = useLocation().pathname.includes("seller");
   const {showLogin,isSeller} = useAppContext();
@@ -36,16 +37,10 @@ function App() {
           <Routes>
             <Route path='/' element={<Home/>}/>
             <Route path='/products' element={<AllProduct/>}/>
-            
-            {/* सबसे specific route पहले - subcategory route */}
-            <Route path='/products/:category/:subcategory' element={<Productcato/>}/>
-            
-            {/* फिर category route */}
             <Route path='/products/:category' element={<Productcato/>}/>
-            
-            {/* Product detail के लिए अलग route pattern */}
+            <Route path='/products/:category/:subcategory' element={<Productcato/>}/>
+            {/* Product detail route को specific pattern दें */}
             <Route path='/product/:id' element={<ProductDetail/>}/>
-            
             <Route path='/cart' element={<Cart/>}/>
             <Route path='/add-address' element={<Addaddress/>}/>
             <Route path='/myOrders' element={<Myorders/>}/>
