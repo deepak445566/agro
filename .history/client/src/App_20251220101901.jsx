@@ -54,7 +54,7 @@ function App() {
             <Route path="/term" element={<TermsAndConditions/>}/>
             <Route path="/return" element={<ReturnRefundPolicy/>}/>
             <Route path='/policy' element={<PrivacyPolicy/>}/>
-<Route path='/contact' element={<Contact/>}/>
+<Route path='/contact' element={<Contact/>}
             <Route path='/seller' element={isSeller?<SellerLayout/> :<SellerLogin/>}>
               <Route index element={isSeller?<Addproduct/>:null} />
               <Route path='product-list' element={isSeller?<ProductList/>:null} />
