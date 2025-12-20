@@ -7,12 +7,12 @@ function MainBanner() {
     <div className="relative w-full">
       {/* Banner image */}
       <img
-        src="/lo2.png"
+        src="/lo.png"
         alt="Main banner"
         className="w-full hidden md:block"
       />
       <img
-        src="/mo1.png"
+        src="/mo.png"
         alt="Main banner mobile"
         className="w-full md:hidden"
       />
