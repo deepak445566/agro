@@ -98,7 +98,7 @@ const Contact = () => {
                   <h3 className="text-xl font-bold text-gray-800">WhatsApp</h3>
                 </div>
                 <p className="text-gray-600 mb-4">Quick chat & inquiries</p>
-                <p className="text-xl font-bold text-gray-900 mb-4">+91 85868 45185</p>
+                <p className="text-2xl font-bold text-gray-900 mb-4">+91 85868 45185</p>
                 <button
                   onClick={handleWhatsApp}
                   className="w-full py-3 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg transition-colors flex items-center justify-center gap-2"
