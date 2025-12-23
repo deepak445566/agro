@@ -33,7 +33,7 @@ function App() {
         {isSellerPath ? null : <Navbar/>}
         {showLogin ? <Login/> : null}
         <Toaster></Toaster>
-        <div className={` ${isSellerPath ? " ":"px-6 md:px-16 lg:px-24 xl:px-28" }`}>
+        <div className={` ${isSellerPath ? " ":"px-6 md:px-16 lg:px-24 xl:px-3" }`}>
           <Routes>
             <Route path='/' element={<Home/>}/>
             <Route path='/products' element={<AllProduct/>}/>

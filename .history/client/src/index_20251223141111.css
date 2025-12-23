@@ -34,3 +34,19 @@
   transition: opacity 300ms, transform 300ms;
 }
 /* index.css में सिर्फ यह जोड़ो */
+@keyframes marqueeScroll {
+    0% { transform: translateX(0%); }
+    100% { transform: translateX(-50%); }
+}
+
+/* Brand logo hover effect */
+.brand-image {
+    filter: grayscale(100%);
+    opacity: 0.8;
+    transition: all 0.3s ease;
+}
+
+.brand-image:hover {
+    filter: grayscale(0%);
+    opacity: 1;
+}
