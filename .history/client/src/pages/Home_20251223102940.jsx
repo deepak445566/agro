@@ -8,7 +8,6 @@ import NewsLetter from '../components/NewsLetter'
 import OurStory from '../components/OurStory'
 import Reviews from '../components/Reviews'
 import Categories from '../components/Categories'
-import FloatingButtons from '../components/FloatingButtons'
 
 export default function() {
   return (
@@ -19,7 +18,7 @@ export default function() {
     <BestSeller/>
     <OurStory/>
    <Reviews/>
-  <FloatingButtons/>
+  <Flo
    </div>
    </>
   )

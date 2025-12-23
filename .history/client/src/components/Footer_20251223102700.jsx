@@ -25,21 +25,14 @@ function Footer() {
                     ))}
                 </div>
             </div>
-            <div className='flex justify-between'>
-    <p className="py-4 text-center text-sm md:text-base text-gray-500/80">
-        Copyright 2025 © <a href="#" className="hover:text-gray-700">KuntalAgroAgency</a> All Right Reserved.
-    </p>
-    <p className="py-4 text-center text-sm md:text-base text-gray-500/80">
-        Design and Developed By <a 
-            href="https://www.digitalexpressindia.com" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="hover:text-gray-700 underline"
-        >
-            DigitalExpressIndia
-        </a>
-    </p>
-</div>
+            <div>
+            <p className="py-4 text-center text-sm md:text-base text-gray-500/80">
+                Copyright 2025 © <a href="https://prebuiltui.com">KuntalAgroAgency</a> All Right Reserved.
+            </p>
+              <p className="py-4 text-center text-sm md:text-base text-gray-500/80">
+               Design and Developed By 
+            </p>
+            </div>
         </div>
     
  </>
