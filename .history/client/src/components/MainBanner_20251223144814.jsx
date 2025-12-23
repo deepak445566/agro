@@ -25,7 +25,7 @@ function MainBanner() {
         <div className="lg:mt-66 mt-20 mr-32 flex flex-col md:flex-row items-center  md:justify-start gap-4">
           <Link
             to="/products"
-            className="flex items-center gap-2 px-2 lg:px-7 py-3 bg-green-500 hover:bg-green-600 text-white rounded-md transition"
+            className="flex items-center gap-2 px-7 py-3 bg-green-500 hover:bg-green-600 text-white rounded-md transition"
           >
             Shop now
             <img
