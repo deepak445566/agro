@@ -122,7 +122,7 @@ const Contact = () => {
               
               <div className="space-y-4">
                 <div className="flex justify-between items-center py-3 border-b border-gray-100">
-                  <span className="text-gray-700 font-medium">Monday - Sunday</span>
+                  <span className="text-gray-700 font-medium">Monday - Saturday</span>
                   <span className="font-bold text-green-700">8:00 AM - 8:00 PM</span>
                 </div>
                
