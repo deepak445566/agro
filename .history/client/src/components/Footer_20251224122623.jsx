@@ -82,7 +82,7 @@ function Footer() {
         <p className="text-center text-sm md:text-base text-gray-500/80 mb-4 md:mb-0">
           Copyright 2025 ©{" "}
           <a href="#" className="hover:text-gray-700">
-            KuntalAgroAgencies
+            KuntalAgroAgenc
           </a>{" "}
           All Right Reserved.
         </p>

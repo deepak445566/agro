@@ -1,4 +1,4 @@
-// TermsAndConditions.jsx - Updated with exact location and contact details
+// TermsAndConditions.jsx
 import React, { useState } from 'react';
 import { 
   CheckCircle, 
@@ -11,12 +11,7 @@ import {
   Sprout,
   Truck,
   Package,
-  Users,
-  MapPin,
-  Phone,
-  Mail,
-  Clock,
-  Globe
+  Users
 } from 'lucide-react';
 
 const TermsAndConditions = () => {
@@ -32,9 +27,9 @@ const TermsAndConditions = () => {
       id: 'introduction',
       title: 'Introduction & Acceptance',
       icon: <FileText className="w-5 h-5" />,
-      content: `Kuntal Agro Agencies ("we," "our," or "us") is your trusted partner for quality agricultural products and solutions. We are a registered micro-enterprise and agricultural supplies dealer serving farmers in Sohna, Gurugram and surrounding areas since October 2018.
+      content: `Kuntal Agro Expert ("we," "our," or "us") is a registered micro-enterprise and agricultural supplies dealer serving farmers in Sohna, Gurugram and surrounding areas since October 2018. We operate under Udyam registration as Kuntal Agro Agencies, specializing in complete farm solutions.
 
-These Terms and Conditions govern your use of our agricultural products platform and services. By accessing or using our services, you agree to be bound by these terms. If you disagree with any part, please discontinue use immediately.
+These Terms and Conditions govern your use of our agricultural products platform. By accessing or using our services, you agree to be bound by these terms. If you disagree with any part, please discontinue use immediately.
 
 Our mission is to make your farming journey productive and profitable by delivering quality agricultural products straight to your fields.`
     },
@@ -45,39 +40,8 @@ Our mission is to make your farming journey productive and profitable by deliver
       content: `• "User" refers to farmers, agricultural professionals, or any individual/entity using Kuntal Agro services.
 • "Products" include crop seeds, fertilizers, pesticides, farm machinery, sprayers, sprayer parts, household insecticides, terrace gardening supplies, plantation materials, and other agricultural inputs.
 • "Services" encompass product listings, purchasing, delivery, crop care guidance, and related agricultural support.
-• "Platform" means the Kuntal Agro website (kuntalagro.com), mobile application, and our physical store at Shop No.1, Ward No.19, near Civil Hospital, Sohna.
-• "Business Hours" refer to our operational hours: Monday to Sunday, 8:00 AM to 8:00 PM.`
-    },
-    {
-      id: 'contact-info',
-      title: 'Contact & Location Information',
-      icon: <MapPin className="w-5 h-5" />,
-      content: `Primary Contact Details:
-
-📍 PHYSICAL STORE:
-Shop No.1, Ward No.19
-Near Civil Hospital, Sohna Rural
-Sohna, Haryana 122103
-Landmark: 63X8+FR Sohna, Haryana
-(GPS: Near Civil Hospital, Sohna)
-
-📞 TELEPHONE:
-+91 85868 45185 (Business Hours: 8:00 AM - 8:00 PM)
-
-📱 WHATSAPP:
-+91 85868 45185 (For quick chat & inquiries)
-
-📧 EMAIL:
-Kuntalagrosohna@gmail.com (For detailed inquiries and quotations)
-
-🌐 WEBSITE:
-kuntalagro.com (Visit our online portal)
-
-🕐 BUSINESS HOURS:
-Monday - Sunday: 8:00 AM - 8:00 PM
-(Currently: Open · Closes 8:00 PM)
-
-For order-related queries, product guidance, or technical support, please contact us during business hours. Emergency agricultural support available as per capacity.`
+• "Platform" means the Kuntal Agro website, mobile application, and physical store near Sohna Sabzi Mandi.
+• "Kuntal Agro Expert" refers to our service identity providing agricultural expertise and guidance.`
     },
     {
       id: 'account',
@@ -86,7 +50,7 @@ For order-related queries, product guidance, or technical support, please contac
       content: `1. You must be at least 18 years old to create an account or make purchases.
 2. Provide accurate agricultural business information to ensure we can offer the right guidance for your seasonal crops.
 3. Maintain confidentiality of login credentials.
-4. Notify us immediately of unauthorized account access by contacting +91 85868 45185.
+4. Notify us immediately of unauthorized account access.
 5. You are responsible for all activities under your account.
 6. We reserve the right to refuse service to anyone violating agricultural regulations.`
     },
@@ -99,7 +63,7 @@ For order-related queries, product guidance, or technical support, please contac
 • Follow manufacturer instructions carefully for pesticides and fertilizers - we provide dosage and timing guidance but ultimate responsibility lies with the user.
 • Weather, soil conditions, and application methods significantly affect agricultural results.
 • We are not liable for crop outcomes or yield variations despite providing quality products and guidance.
-• For technical product support and seasonal crop advice, visit our store or call +91 85868 45185 during business hours.`
+• Contact our experts directly for technical product support and seasonal crop advice.`
     },
     {
       id: 'ordering',
@@ -108,23 +72,21 @@ For order-related queries, product guidance, or technical support, please contac
       content: `1. Prices are in Indian Rupees (INR) and subject to change without notice.
 2. Orders are confirmed only after payment verification.
 3. We accept UPI, net banking, cards, and agricultural credit options.
-4. Bulk orders for large farms may require special arrangements - contact us directly at +91 85868 45185.
+4. Bulk orders for large farms may require special arrangements - contact us directly.
 5. Contact support within 24 hours for order modifications.
-6. We maintain fair pricing and do not push unnecessary items.
-7. For quotations and bulk pricing, email Kuntalagrosohna@gmail.com.`
+6. We maintain fair pricing and do not push unnecessary items.`
     },
     {
       id: 'shipping',
       title: 'Shipping & Delivery',
       icon: <Truck className="w-5 h-5" />,
       content: `• We deliver quality agriculture products straight to your fields in Sohna, Gurugram, and surrounding areas.
-• Pickup available from our store: Shop No.1, Ward No.19, near Civil Hospital, Sohna.
 • Delivery times vary based on crop seasons, location, and rural accessibility.
 • Rural delivery may take 5-10 business days depending on your village location.
 • Perishable items like seeds require special handling - follow our storage instructions.
-• Inspect deliveries immediately and report damages within 48 hours to +91 85868 45185.
+• Inspect deliveries immediately and report damages within 48 hours.
 • Seasonal demand during planting periods may affect delivery schedules.
-• Free local delivery within Sohna may be available for orders above a certain value.`
+• Free local delivery may be available for orders above a certain value.`
     },
     {
       id: 'returns',
@@ -143,7 +105,7 @@ Not accepted for:
 • Seasonal clearance items
 • Products that have been used or partially consumed
 
-For returns, visit our store or contact +91 85868 45185 during business hours. Refunds processed within 10-14 business days to original payment method.`
+Refunds processed within 10-14 business days to original payment method.`
     },
     {
       id: 'liability',
@@ -156,18 +118,16 @@ For returns, visit our store or contact +91 85868 45185 during business hours. R
 • Transportation delays beyond our control
 • Personal injury from improper use of agricultural chemicals
 
-Maximum liability limited to the value of your order. We are a micro-enterprise serving local farmers with best efforts and expertise.
-
-For urgent agricultural emergencies, contact local agricultural department or call emergency services.`
+Maximum liability limited to the value of your order. We are a micro-enterprise serving local farmers with best efforts and expertise.`
     },
     {
       id: 'intellectual',
       title: 'Intellectual Property',
-      content: `• Kuntal Agro Agencies branding, website content (kuntalagro.com), and platform are protected intellectual property.
+      content: `• Kuntal Agro Expert branding, "For People Who Love Farming" tagline, website content, and platform are protected intellectual property.
 • Agricultural data and farm information you share remains your property.
 • You grant us limited license to use anonymized, aggregated data for service improvement and understanding regional farming patterns.
 • Do not reproduce platform content, product descriptions, or agricultural guidance without written permission.
-• Our website design and development is protected.`
+• Our website design and development by DigitalExpressIndia is protected.`
     },
     {
       id: 'testimonials',
@@ -175,7 +135,7 @@ For urgent agricultural emergencies, contact local agricultural department or ca
       icon: <Users className="w-5 h-5" />,
       content: `• By submitting testimonials, you grant Kuntal Agro permission to use them for marketing with your first name and initial.
 • We may edit testimonials for clarity and length while preserving original meaning.
-• You can request removal of your testimonial by contacting Kuntalagrosohna@gmail.com.
+• You can request removal of your testimonial by contacting us.
 • We display genuine customer experiences to help other farmers make informed decisions.
 • Fake or misleading reviews will be removed, and accounts may be suspended.`
     },
@@ -190,18 +150,18 @@ For urgent agricultural emergencies, contact local agricultural department or ca
 • Non-payment of dues or repeated order cancellations
 • Misuse of farmer discounts or benefits
 
-Terminated accounts lose access to order history and future services. For account disputes, contact +91 85868 45185.`
+Terminated accounts lose access to order history and future services.`
     },
     {
       id: 'governing',
       title: 'Governing Law & Dispute Resolution',
       content: `These terms are governed by Indian law, specifically the laws of the State of Haryana. 
 
-Disputes will be resolved in courts having jurisdiction in Gurugram District, Haryana, India. 
+Disputes will be resolved in courts in Gurugram, Haryana, India. 
 
 Agricultural-specific disputes may first be referred to the Haryana State Agriculture Department or local Krishi Vigyan Kendra for mediation.
 
-We encourage direct communication to resolve any issues before legal proceedings. Contact us at +91 85868 45185 or visit our store in Sohna for dispute resolution.`
+We encourage direct communication to resolve any issues before legal proceedings.`
     },
     {
       id: 'updates',
@@ -210,22 +170,15 @@ We encourage direct communication to resolve any issues before legal proceedings
 
 Continued use after changes constitutes acceptance. 
 
-Major changes affecting user rights will be notified via email, platform announcement, SMS to registered users, or displayed at our store.
+Major changes affecting user rights will be notified via email, platform announcement, or SMS to registered users.
 
 Last updated: ${new Date().toLocaleDateString('en-IN', {
   day: 'numeric',
   month: 'long',
   year: 'numeric'
-})}.
-
-For latest terms, visit kuntalagro.com or our store.`
+})}.`
     }
   ];
-
-  // Current time check for business hours
-  const currentHour = new Date().getHours();
-  const isOpen = currentHour >= 8 && currentHour < 20;
-  const closingTime = "8:00 PM";
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-green-50 to-amber-50 py-8 px-4">
@@ -235,41 +188,31 @@ For latest terms, visit kuntalagro.com or our store.`
           <div className="flex items-center justify-center gap-3 mb-4">
             <Scale className="w-10 h-10 text-green-600" />
             <div>
-              <h1 className="text-4xl font-bold text-gray-800">Kuntal Agro Agencies</h1>
-              <p className="text-green-700 font-medium text-lg">Your trusted partner for quality agricultural products and solutions</p>
+              <h1 className="text-4xl font-bold text-gray-800">Kuntal Agro Expert</h1>
+              <p className="text-green-700 font-medium">For People Who Love Farming</p>
             </div>
           </div>
           <h2 className="text-3xl font-bold text-gray-900 mb-3">
             Terms & Conditions
           </h2>
-          
-          {/* Business Status */}
-          <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full mb-4 ${isOpen ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
-            <div className={`w-2 h-2 rounded-full ${isOpen ? 'bg-green-500' : 'bg-red-500'}`}></div>
-            <span className="font-medium">
-              {isOpen ? `Currently Open · Closes ${closingTime}` : 'Currently Closed · Opens 8:00 AM'}
-            </span>
-          </div>
-          
-          <div className="mt-4 flex flex-col sm:flex-row gap-3 justify-center">
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            Agricultural Products Platform - Governing your use of our services
+          </p>
+          <div className="mt-6 flex flex-col sm:flex-row gap-4 justify-center">
             <div className="px-4 py-2 bg-green-100 text-green-800 rounded-full text-sm font-medium">
-              <MapPin className="inline w-4 h-4 mr-1" />
-              Shop No.1, Ward No.19, Sohna
-            </div>
-            <div className="px-4 py-2 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">
-              <Phone className="inline w-4 h-4 mr-1" />
-              +91 85868 45185
+              Udyam Registered Micro-Enterprise
             </div>
             <div className="px-4 py-2 bg-amber-100 text-amber-800 rounded-full text-sm font-medium">
-              <Clock className="inline w-4 h-4 mr-1" />
-              8AM-8PM, 7 Days
+              Serving Sohna & Gurugram Since 2018
+            </div>
+            <div className="px-4 py-2 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">
+              Trusted by 500+ Farmers
             </div>
           </div>
-          
           <div className="mt-6 p-4 bg-amber-50 border border-amber-200 rounded-lg max-w-2xl mx-auto">
             <p className="text-amber-800 font-medium">
               <AlertTriangle className="inline w-5 h-5 mr-2" />
-              Important: These terms affect your legal rights. Please read carefully before using our services.
+              Important: These terms affect your legal rights. Please read carefully before using our agricultural services.
             </p>
           </div>
         </div>
@@ -341,6 +284,14 @@ For latest terms, visit kuntalagro.com or our store.`
                       <div className="whitespace-pre-line text-gray-700 leading-relaxed">
                         {section.content}
                       </div>
+                      {section.id === 'product' && (
+                        <div className="mt-4 p-4 bg-blue-50 rounded-lg border border-blue-100">
+                          <p className="text-sm text-blue-800">
+                            <strong>Note:</strong> We stock top brands and offer organic options. 
+                            Our experts provide guidance based on years of experience serving local farmers.
+                          </p>
+                        </div>
+                      )}
                     </div>
                   </div>
                 )}
@@ -360,9 +311,9 @@ For latest terms, visit kuntalagro.com or our store.`
                 Agreement Acceptance
               </h3>
               <p className="text-gray-600">
-                By using Kuntal Agro Agencies' agricultural platform and services, you acknowledge 
+                By using Kuntal Agro Expert's agricultural platform and services, you acknowledge 
                 reading and understanding these terms and agree to be bound by them as a 
-                registered micro-enterprise serving the farming community of Sohna and surrounding areas.
+                registered micro-enterprise serving the farming community.
               </p>
             </div>
           </div>
@@ -381,9 +332,9 @@ For latest terms, visit kuntalagro.com or our store.`
                   I have read, understood, and agree to the Terms & Conditions
                 </span>
                 <span className="text-sm">
-                  I acknowledge these terms govern my use of Kuntal Agro Agencies' agricultural 
-                  products and services from Shop No.1, Ward No.19, near Civil Hospital, Sohna, 
-                  including ordering, delivery, returns, and the limitation of liability.
+                  I acknowledge these terms govern my use of Kuntal Agro Expert's agricultural 
+                  products and services, including ordering, delivery, returns, and the 
+                  limitation of liability as a local agricultural supplier.
                 </span>
               </label>
             </div>
@@ -392,7 +343,7 @@ For latest terms, visit kuntalagro.com or our store.`
               <button
                 onClick={() => {
                   if (accepted) {
-                    alert('Thank you for accepting our Terms & Conditions! Welcome to Kuntal Agro Agencies - Your trusted partner for quality agricultural products and solutions.');
+                    alert('Thank you for accepting our Terms & Conditions! Welcome to Kuntal Agro Expert - For People Who Love Farming.');
                     // In a real app, you would navigate to next step or save acceptance
                   }
                 }}
@@ -416,172 +367,47 @@ For latest terms, visit kuntalagro.com or our store.`
               </button>
               
               <button
-                onClick={() => window.open('mailto:Kuntalagrosohna@gmail.com?subject=Terms%20and%20Conditions%20Query', '_blank')}
+                onClick={() => window.location.href = 'mailto:info@kuntalagro.com?subject=Terms%20and%20Conditions%20Query'}
                 className="px-6 py-3 border border-gray-300 rounded-lg font-medium text-gray-700 hover:bg-gray-50 transition-colors flex items-center gap-2"
               >
-                <Mail className="w-4 h-4" />
-                Email Questions
+                Contact Legal/Support
               </button>
               
               <button
-                onClick={() => window.open('tel:+918586845185', '_blank')}
-                className="px-6 py-3 border border-green-200 text-green-700 rounded-lg font-medium hover:bg-green-50 transition-colors flex items-center gap-2"
+                onClick={() => window.location.href = 'https://kuntalagro.com'}
+                className="px-6 py-3 border border-green-200 text-green-700 rounded-lg font-medium hover:bg-green-50 transition-colors"
               >
-                <Phone className="w-4 h-4" />
-                Call Now (+91 85868 45185)
+                Visit Our Website
               </button>
             </div>
           </div>
         </div>
 
-        {/* Contact Details Footer */}
-        <div className="bg-white rounded-2xl shadow-xl p-8 mb-8">
-          <h3 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-            <MapPin className="w-6 h-6 text-green-600" />
-            Our Contact Details
-          </h3>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Left Column */}
-            <div className="space-y-6">
-              <div className="flex items-start gap-4">
-                <div className="flex-shrink-0">
-                  <MapPin className="w-6 h-6 text-green-600" />
-                </div>
-                <div>
-                  <h4 className="font-bold text-gray-800 mb-2">Our Location</h4>
-                  <p className="text-gray-600 mb-1">Find us easily using Google Maps</p>
-                  <div className="bg-gray-50 p-4 rounded-lg">
-                    <p className="font-medium">Shop Address:</p>
-                    <p className="text-gray-700">Shop No.1, Ward No.19</p>
-                    <p className="text-gray-700">Near Civil Hospital, Sohna Rural</p>
-                    <p className="text-gray-700">Sohna, Haryana 122103</p>
-                    <p className="text-gray-600 text-sm mt-1">Landmark: 63X8+FR Sohna, Haryana</p>
-                    <button
-                      onClick={() => window.open('https://maps.google.com/?q=Shop+No.1+ward+no.19+near+Civil+Hospital+Sohna+Haryana+122103', '_blank')}
-                      className="mt-3 inline-flex items-center gap-2 text-green-600 font-medium hover:text-green-700"
-                    >
-                      <MapPin className="w-4 h-4" />
-                      Open in Google Maps
-                    </button>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="flex items-start gap-4">
-                <div className="flex-shrink-0">
-                  <Phone className="w-6 h-6 text-green-600" />
-                </div>
-                <div>
-                  <h4 className="font-bold text-gray-800 mb-2">Call Us</h4>
-                  <p className="text-gray-600 mb-2">Available during business hours</p>
-                  <div className="flex items-center gap-3">
-                    <a 
-                      href="tel:+918586845185"
-                      className="bg-green-100 text-green-700 px-4 py-2 rounded-lg font-bold hover:bg-green-200 transition-colors"
-                    >
-                      +91 85868 45185
-                    </a>
-                    <button
-                      onClick={() => window.open('tel:+918586845185', '_blank')}
-                      className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
-                    >
-                      Call Now
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            {/* Right Column */}
-            <div className="space-y-6">
-              <div className="flex items-start gap-4">
-                <div className="flex-shrink-0">
-                  <Mail className="w-6 h-6 text-green-600" />
-                </div>
-                <div>
-                  <h4 className="font-bold text-gray-800 mb-2">Email Us</h4>
-                  <p className="text-gray-600 mb-2">For detailed inquiries and quotations</p>
-                  <div className="flex items-center gap-3">
-                    <a 
-                      href="mailto:Kuntalagrosohna@gmail.com"
-                      className="bg-blue-100 text-blue-700 px-4 py-2 rounded-lg font-medium hover:bg-blue-200 transition-colors"
-                    >
-                      Kuntalagrosohna@gmail.com
-                    </a>
-                    <button
-                      onClick={() => window.open('mailto:Kuntalagrosohna@gmail.com', '_blank')}
-                      className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
-                    >
-                      Email Now
-                    </button>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="flex items-start gap-4">
-                <div className="flex-shrink-0">
-                  <Clock className="w-6 h-6 text-green-600" />
-                </div>
-                <div>
-                  <h4 className="font-bold text-gray-800 mb-2">Business Hours</h4>
-                  <div className="bg-gray-50 p-4 rounded-lg">
-                    <p className="text-gray-700 font-medium">Monday - Sunday</p>
-                    <p className="text-gray-700 text-lg font-bold">8:00 AM - 8:00 PM</p>
-                    <div className={`inline-flex items-center gap-2 mt-2 px-3 py-1 rounded-full ${isOpen ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
-                      <div className={`w-2 h-2 rounded-full ${isOpen ? 'bg-green-500' : 'bg-red-500'}`}></div>
-                      <span className="font-medium">
-                        {isOpen ? `Currently Open · Closes ${closingTime}` : 'Currently Closed · Opens 8:00 AM'}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="flex items-start gap-4">
-                <div className="flex-shrink-0">
-                  <Globe className="w-6 h-6 text-green-600" />
-                </div>
-                <div>
-                  <h4 className="font-bold text-gray-800 mb-2">Website</h4>
-                  <button
-                    onClick={() => window.open('https://kuntalagro.com', '_blank')}
-                    className="text-green-600 font-medium hover:text-green-700 hover:underline"
-                  >
-                    kuntalagro.com
-                  </button>
-                  <p className="text-gray-600 text-sm mt-1">Visit our online portal for products and information</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Final Footer */}
+        {/* Footer Note */}
         <div className="text-center text-gray-500 text-sm space-y-2">
           <div className="p-4 bg-gray-50 rounded-lg mb-4">
             <p className="mb-2 font-medium text-gray-700">
               For agricultural emergency contacts, pesticide poisoning help, or immediate crop advice:
             </p>
             <p className="mb-2">
-              Call: <span className="font-bold text-green-700">+91 85868 45185</span> (During Business Hours: 8AM-8PM)
+              Call: <span className="font-bold text-green-700">1800-XXX-XXXX</span> (24/7 Agricultural Helpline)
             </p>
             <p className="text-xs">
-              Visit our store at Shop No.1, Ward No.19, near Civil Hospital, Sohna for in-person guidance.
+              Local Sohna/Gurugram farmers can visit our store near Sohna Sabzi Mandi for in-person guidance.
             </p>
           </div>
           
           <p className="text-gray-600">
-            <strong>Kuntal Agro Agencies</strong> • Your trusted partner for quality agricultural products and solutions
+            <strong>Kuntal Agro Agencies</strong> • Udyam Registered Micro-Enterprise • 
+            Serving Since October 2018
           </p>
           <p className="text-gray-500">
-            Shop No.1, Ward No.19, near Civil Hospital, Sohna, Haryana 122103 • 
-            Kuntalagrosohna@gmail.com • +91 85868 45185
+            info@kuntalagro.com • Store: Near Sohna Sabzi Mandi, Sohna, Gurugram, Haryana
           </p>
           <p className="text-gray-400 pt-2 border-t border-gray-200">
             © {new Date().getFullYear()} Kuntal Agro Agencies. All Rights Reserved.
             <br />
-            Udyam Registered Micro-Enterprise • Established October 2018
+            Design and Developed By DigitalExpressIndia
           </p>
         </div>
       </div>
