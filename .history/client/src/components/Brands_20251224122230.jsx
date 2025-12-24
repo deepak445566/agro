@@ -54,7 +54,7 @@ const Brands = () => {
                                 <img 
                                     src={file}
                                     alt={`Brand ${(index % brandFiles.length) + 1}`}
-                                    className="brand-image h-18 md:h-24 lg:h-30 w-auto object-cover transition-all duration-300 max-w-[100px] md:max-w-[140px]"
+                                    className="brand-image h-10 md:h-14 lg:h-30 w-auto object-contain transition-all duration-300 max-w-[100px] md:max-w-[140px]"
                                     loading="lazy"
                                 />
                             </div>

@@ -118,8 +118,8 @@ export const footerLinks = [
     title: "Quick Links",
     links: [
       { text: "Home", url: "#" },
-     { text: "Products", url: "/products" },
-      { text: "Contact Us", url: "/contact" },
+    {}
+      { text: "Contact Us", url: "#" },
      
     ],
   },
