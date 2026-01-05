@@ -134,7 +134,7 @@ const Reviews = () => {
               <div className="text-gray-600">Happy Farmers</div>
             </div>
             <div className="text-center">
-              <div className="text-4xl md:text-5xl font-bold text-green-700 mb-2">8+</div>
+              <div className="text-4xl md:text-5xl font-bold text-green-700 mb-2">2+</div>
               <div className="text-gray-600">Years Serving</div>
             </div>
             <div className="text-center">
