@@ -15,7 +15,6 @@ export default function() {
   return (
    <>
    <div className='mt-10'>
-     <Brands/>
     <MainBanner/>
  <Categories/>
     <BestSeller/>

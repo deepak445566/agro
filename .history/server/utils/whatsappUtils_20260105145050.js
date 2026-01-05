@@ -43,7 +43,7 @@ _This is an automated order notification. Please process the order._`;
   return message;
 };
 
-export const getWhatsAppURL = (message, phoneNumber = "918586845185") => {
+export const getWhatsAppURL = (message, phoneNumber = "91") => {
   // Remove + from phone number if present
   const cleanPhone = phoneNumber.replace('+', '');
   
@@ -55,7 +55,7 @@ export const getWhatsAppURL = (message, phoneNumber = "918586845185") => {
 };
 
 // For direct WhatsApp Web opening
-export const openWhatsAppWeb = (message, phoneNumber = "918586845185") => {
+export const openWhatsAppWeb = (message, phoneNumber = "919911577652") => {
   const cleanPhone = phoneNumber.replace('+', '');
   const encodedMessage = encodeURIComponent(message);
   const url = `https://web.whatsapp.com/send?phone=${cleanPhone}&text=${encodedMessage}`;
@@ -63,7 +63,7 @@ export const openWhatsAppWeb = (message, phoneNumber = "918586845185") => {
 };
 
 // For mobile devices
-export const openWhatsAppMobile = (message, phoneNumber = "918586845185") => {
+export const openWhatsAppMobile = (message, phoneNumber = "919911577652") => {
   const cleanPhone = phoneNumber.replace('+', '');
   const encodedMessage = encodeURIComponent(message);
   const url = `https://wa.me/${cleanPhone}?text=${encodedMessage}`;

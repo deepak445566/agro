@@ -139,7 +139,7 @@ _This is an automated order notification. Please process the order._`;
   };
 
   const sendWhatsAppNotification = (orderId, totalAmount, transactionId) => {
-    const phoneNumber = "918586845185";
+    const phoneNumber = "919911577652";
     
     const orderData = {
       orderId,

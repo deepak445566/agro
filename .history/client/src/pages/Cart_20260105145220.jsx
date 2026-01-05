@@ -103,7 +103,7 @@ const Cart = () => {
 📋 *ORDER DETAILS:*
 • Order ID: ${orderId}
 • Customer: ${user?.name || "Customer"}
-
+• Customer Phone: ${customerPhone || user?.phone || "Not provided"}
 • Payment: Online
 • Transaction ID: ${transactionId}
 • Order Time: ${new Date().toLocaleString('en-IN', { 
@@ -139,7 +139,7 @@ _This is an automated order notification. Please process the order._`;
   };
 
   const sendWhatsAppNotification = (orderId, totalAmount, transactionId) => {
-    const phoneNumber = "918586845185";
+    const phoneNumber = "919911577652";
     
     const orderData = {
       orderId,
