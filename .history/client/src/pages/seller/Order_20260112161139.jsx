@@ -85,7 +85,7 @@ const generateInvoiceHTML = (order) => {
   
   // GST numbers
   const gstNo = "06CFEPK5827G1ZG";
-  const panNo = "AABCU9603R";
+ 
 
   return `
     <!DOCTYPE html>

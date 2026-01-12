@@ -84,8 +84,8 @@ const generateInvoiceHTML = (order) => {
   const grandTotal = subtotal + totalGST;
   
   // GST numbers
-  const gstNo = "06CFEPK5827G1ZG";
-  const panNo = "AABCU9603R";
+  const gstNo = "07AABCU9603R1Z2";
+ 
 
   return `
     <!DOCTYPE html>
