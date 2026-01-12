@@ -228,56 +228,65 @@ const generateInvoiceHTML = (order) => {
   };
 
   // Function to download invoice as PDF
-// Update the downloadInvoice function to use smaller format
-const downloadInvoice = async (order) => {
-  try {
-    setDownloadingInvoice(order._id);
-    
-    // Create temporary div for invoice
-    const tempDiv = document.createElement('div');
-    tempDiv.style.position = 'absolute';
-    tempDiv.style.left = '-9999px';
-    tempDiv.innerHTML = generateInvoiceHTML(order);
-    document.body.appendChild(tempDiv);
-    
-    // Use html2canvas to capture the invoice
-    const canvas = await html2canvas(tempDiv, {
-      scale: 3, // Higher scale for better quality on small size
-      useCORS: true,
-      logging: false,
-      backgroundColor: '#ffffff',
-      width: 226, // 80mm in pixels (80 * 3.78 = ~302, but using smaller for margin)
-      height: tempDiv.scrollHeight * 3
-    });
-    
-    // Remove temporary div
-    document.body.removeChild(tempDiv);
-    
-    // Create PDF with smaller size (80mm width, auto height)
-    const pdf = new jsPDF({
-      orientation: 'portrait',
-      unit: 'mm',
-      format: [80, tempDiv.scrollHeight + 20] // Auto height
-    });
-    
-    const imgData = canvas.toDataURL('image/png');
-    const imgWidth = 70; // Leave 5mm margin on each side
-    const imgHeight = (canvas.height * imgWidth) / canvas.width;
-    
-    pdf.addImage(imgData, 'PNG', 5, 5, imgWidth, imgHeight);
-    
-    // Save PDF
-    const fileName = `Invoice_${order._id.slice(-8)}.pdf`;
-    pdf.save(fileName);
-    
-    toast.success('Invoice downloaded successfully!');
-  } catch (error) {
-    console.error('Error generating invoice:', error);
-    toast.error('Failed to generate invoice');
-  } finally {
-    setDownloadingInvoice(null);
-  }
-};
+  const downloadInvoice = async (order) => {
+    try {
+      setDownloadingInvoice(order._id);
+      
+      // Create temporary div for invoice
+      const tempDiv = document.createElement('div');
+      tempDiv.style.position = 'absolute';
+      tempDiv.style.left = '-9999px';
+      tempDiv.innerHTML = generateInvoiceHTML(order);
+      document.body.appendChild(tempDiv);
+      
+      // Use html2canvas to capture the invoice
+      const canvas = await html2canvas(tempDiv, {
+        scale: 2,
+        useCORS: true,
+        logging: false,
+        backgroundColor: '#ffffff'
+      });
+      
+      // Remove temporary div
+      document.body.removeChild(tempDiv);
+      
+      // Create PDF
+      const pdf = new jsPDF({
+        orientation: 'portrait',
+        unit: 'mm',
+        format: 'a4'
+      });
+      
+      const imgData = canvas.toDataURL('image/png');
+      const imgWidth = 210; // A4 width in mm
+      const pageHeight = 295; // A4 height in mm
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      
+      let heightLeft = imgHeight;
+      let position = 0;
+      
+      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
+      
+      while (heightLeft >= 0) {
+        position = heightLeft - imgHeight;
+        pdf.addPage();
+        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+      }
+      
+      // Save PDF
+      const fileName = `Invoice_${order._id.slice(-8)}_${new Date().toISOString().split('T')[0]}.pdf`;
+      pdf.save(fileName);
+      
+      toast.success('Invoice downloaded successfully!');
+    } catch (error) {
+      console.error('Error generating invoice:', error);
+      toast.error('Failed to generate invoice');
+    } finally {
+      setDownloadingInvoice(null);
+    }
+  };
 
   // Function to print invoice
   const printInvoice = (order) => {

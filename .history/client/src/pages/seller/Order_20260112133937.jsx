@@ -43,164 +43,7 @@ function Order() {
   };
 
   // Function to generate invoice HTML
- // Function to generate compact invoice HTML for half page
-const generateInvoiceHTML = (order) => {
-  if (!order) return '';
-  
-  const orderDate = order.createdAt ? new Date(order.createdAt) : new Date();
-  const formattedDate = orderDate.toLocaleDateString('en-IN');
-  const formattedTime = orderDate.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
-  
-  // Calculate GST and totals
-  let subtotal = 0;
-  let totalGST = 0;
-  let gstBreakdown = {};
-  
-  order.items?.forEach(item => {
-    const product = item.product || {};
-    const gstPercentage = product.gstPercentage || 5;
-    const unitPrice = product.offerPrice || product.price || 0;
-    const quantity = item.quantity || 1;
-    const itemSubtotal = unitPrice * quantity;
-    const gstAmount = (itemSubtotal * gstPercentage) / 100;
-    
-    subtotal += itemSubtotal;
-    totalGST += gstAmount;
-    
-    if (!gstBreakdown[gstPercentage]) {
-      gstBreakdown[gstPercentage] = 0;
-    }
-    gstBreakdown[gstPercentage] += gstAmount;
-  });
-  
-  const grandTotal = subtotal + totalGST;
-  
-  return `
-    <div id="invoice-content" style="font-family: 'Arial', sans-serif; width: 80mm; margin: 0 auto; padding: 10px; background: white;">
-      <!-- Header -->
-      <div style="text-align: center; border-bottom: 1px solid #4FBF8B; padding-bottom: 8px; margin-bottom: 10px;">
-        <h1 style="color: #4FBF8B; margin: 0; font-size: 16px; font-weight: bold;">KuntalAgroAgencies</h1>
-        <p style="color: #666; margin: 2px 0; font-size: 10px;">Farm & Garden Solutions</p>
-        <p style="color: #666; margin: 0; font-size: 8px;">+91 8586845185</p>
-      </div>
-
-      <!-- Invoice Details -->
-      <div style="margin-bottom: 8px;">
-        <div style="display: flex; justify-content: space-between; margin-bottom: 3px;">
-          <span style="font-size: 9px; color: #666;">INVOICE</span>
-          <span style="font-size: 9px; font-weight: bold;">#${order._id?.slice(-8) || 'N/A'}</span>
-        </div>
-        <div style="display: flex; justify-content: space-between;">
-          <span style="font-size: 9px; color: #666;">Date:</span>
-          <span style="font-size: 9px;">${formattedDate} ${formattedTime}</span>
-        </div>
-      </div>
-
-      <!-- Customer Info -->
-      ${order.address ? `
-        <div style="margin-bottom: 8px; font-size: 9px;">
-          <div style="font-weight: bold; color: #333; margin-bottom: 2px;">Customer</div>
-          <div>${order.address.firstname || ''} ${order.address.lastname || ''}</div>
-          <div>${order.address.phone || 'N/A'}</div>
-          <div>${order.address.email || ''}</div>
-          <div>${order.address.street || ''}, ${order.address.city || ''}</div>
-          <div>${order.address.state || ''} - ${order.address.zipcode || ''}</div>
-        </div>
-      ` : ''}
-
-      <!-- Order Summary -->
-      <div style="margin-bottom: 8px; font-size: 9px;">
-        <div style="font-weight: bold; color: #333; margin-bottom: 2px;">Order Summary</div>
-        <div style="display: flex; justify-content: space-between;">
-          <span>Txn ID:</span>
-          <span>${order.transactionId?.slice(0, 12) || 'N/A'}</span>
-        </div>
-        <div style="display: flex; justify-content: space-between;">
-          <span>Payment:</span>
-          <span style="color: ${order.isPaid ? '#10b981' : '#f59e0b'};">${order.isPaid ? 'Paid' : 'Pending'}</span>
-        </div>
-        <div style="display: flex; justify-content: space-between;">
-          <span>Method:</span>
-          <span>${order.paymentType || 'Online'}</span>
-        </div>
-      </div>
-
-      <!-- Items Table -->
-      <div style="margin-bottom: 10px;">
-        <div style="font-weight: bold; color: #333; font-size: 9px; margin-bottom: 3px;">Items (${order.items?.length || 0})</div>
-        <div style="font-size: 8px;">
-          ${order.items?.slice(0, 5).map((item, index) => {
-            const product = item.product || {};
-            const gstPercentage = product.gstPercentage || 5;
-            const unitPrice = product.offerPrice || product.price || 0;
-            const quantity = item.quantity || 1;
-            const itemSubtotal = unitPrice * quantity;
-            const gstAmount = (itemSubtotal * gstPercentage) / 100;
-            const itemTotal = itemSubtotal + gstAmount;
-            
-            return `
-              <div style="border-bottom: 0.5px dotted #ddd; padding: 2px 0;">
-                <div style="display: flex; justify-content: space-between;">
-                  <span><strong>${index + 1}. ${product.name?.substring(0, 20) || 'Product'}...</strong></span>
-                  <span>₹${itemTotal.toFixed(2)}</span>
-                </div>
-                <div style="display: flex; justify-content: space-between; color: #666;">
-                  <span>${quantity} x ₹${unitPrice.toFixed(2)}</span>
-                  <span>GST ${gstPercentage}%: ₹${gstAmount.toFixed(2)}</span>
-                </div>
-              </div>
-            `;
-          }).join('')}
-          
-          ${order.items && order.items.length > 5 ? `
-            <div style="text-align: center; padding: 2px; color: #666; font-size: 8px;">
-              + ${order.items.length - 5} more items
-            </div>
-          ` : ''}
-        </div>
-      </div>
-
-      <!-- Totals -->
-      <div style="border-top: 1px solid #333; padding-top: 5px; margin-bottom: 8px;">
-        <div style="display: flex; justify-content: space-between; font-size: 9px;">
-          <span>Subtotal:</span>
-          <span>₹${subtotal.toFixed(2)}</span>
-        </div>
-        
-        <!-- GST Breakdown -->
-        ${Object.entries(gstBreakdown).map(([percentage, amount]) => `
-          <div style="display: flex; justify-content: space-between; font-size: 8px; color: #666;">
-            <span>GST ${percentage}%:</span>
-            <span>₹${amount.toFixed(2)}</span>
-          </div>
-        `).join('')}
-        
-        <div style="display: flex; justify-content: space-between; font-size: 9px; margin-top: 2px;">
-          <span>Shipping:</span>
-          <span style="color: #10b981;">FREE</span>
-        </div>
-        
-        <div style="display: flex; justify-content: space-between; font-size: 12px; font-weight: bold; border-top: 1px solid #333; padding-top: 3px; margin-top: 3px;">
-          <span>TOTAL:</span>
-          <span>₹${grandTotal.toFixed(2)}</span>
-        </div>
-        
-        <div style="font-size: 7px; color: #666; text-align: center; margin-top: 2px;">
-          ${numberToWords(grandTotal)} only
-        </div>
-      </div>
-
-      <!-- Footer -->
-      <div style="border-top: 1px solid #4FBF8B; padding-top: 5px; text-align: center; font-size: 7px; color: #666;">
-        <div>Thank you for your business!</div>
-        <div>Contact: +91 8586845185</div>
-        <div style="margin-top: 3px;">
-          <strong>This is a computer generated invoice</strong>
-        </div>
-      </div>
-    </div>
-  `;
-};
+  const generateInvoiceHTML = (order) => {
 
   // Function to convert number to words
   const numberToWords = (num) => {
@@ -228,56 +71,65 @@ const generateInvoiceHTML = (order) => {
   };
 
   // Function to download invoice as PDF
-// Update the downloadInvoice function to use smaller format
-const downloadInvoice = async (order) => {
-  try {
-    setDownloadingInvoice(order._id);
-    
-    // Create temporary div for invoice
-    const tempDiv = document.createElement('div');
-    tempDiv.style.position = 'absolute';
-    tempDiv.style.left = '-9999px';
-    tempDiv.innerHTML = generateInvoiceHTML(order);
-    document.body.appendChild(tempDiv);
-    
-    // Use html2canvas to capture the invoice
-    const canvas = await html2canvas(tempDiv, {
-      scale: 3, // Higher scale for better quality on small size
-      useCORS: true,
-      logging: false,
-      backgroundColor: '#ffffff',
-      width: 226, // 80mm in pixels (80 * 3.78 = ~302, but using smaller for margin)
-      height: tempDiv.scrollHeight * 3
-    });
-    
-    // Remove temporary div
-    document.body.removeChild(tempDiv);
-    
-    // Create PDF with smaller size (80mm width, auto height)
-    const pdf = new jsPDF({
-      orientation: 'portrait',
-      unit: 'mm',
-      format: [80, tempDiv.scrollHeight + 20] // Auto height
-    });
-    
-    const imgData = canvas.toDataURL('image/png');
-    const imgWidth = 70; // Leave 5mm margin on each side
-    const imgHeight = (canvas.height * imgWidth) / canvas.width;
-    
-    pdf.addImage(imgData, 'PNG', 5, 5, imgWidth, imgHeight);
-    
-    // Save PDF
-    const fileName = `Invoice_${order._id.slice(-8)}.pdf`;
-    pdf.save(fileName);
-    
-    toast.success('Invoice downloaded successfully!');
-  } catch (error) {
-    console.error('Error generating invoice:', error);
-    toast.error('Failed to generate invoice');
-  } finally {
-    setDownloadingInvoice(null);
-  }
-};
+  const downloadInvoice = async (order) => {
+    try {
+      setDownloadingInvoice(order._id);
+      
+      // Create temporary div for invoice
+      const tempDiv = document.createElement('div');
+      tempDiv.style.position = 'absolute';
+      tempDiv.style.left = '-9999px';
+      tempDiv.innerHTML = generateInvoiceHTML(order);
+      document.body.appendChild(tempDiv);
+      
+      // Use html2canvas to capture the invoice
+      const canvas = await html2canvas(tempDiv, {
+        scale: 2,
+        useCORS: true,
+        logging: false,
+        backgroundColor: '#ffffff'
+      });
+      
+      // Remove temporary div
+      document.body.removeChild(tempDiv);
+      
+      // Create PDF
+      const pdf = new jsPDF({
+        orientation: 'portrait',
+        unit: 'mm',
+        format: 'a4'
+      });
+      
+      const imgData = canvas.toDataURL('image/png');
+      const imgWidth = 210; // A4 width in mm
+      const pageHeight = 295; // A4 height in mm
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      
+      let heightLeft = imgHeight;
+      let position = 0;
+      
+      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
+      
+      while (heightLeft >= 0) {
+        position = heightLeft - imgHeight;
+        pdf.addPage();
+        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+      }
+      
+      // Save PDF
+      const fileName = `Invoice_${order._id.slice(-8)}_${new Date().toISOString().split('T')[0]}.pdf`;
+      pdf.save(fileName);
+      
+      toast.success('Invoice downloaded successfully!');
+    } catch (error) {
+      console.error('Error generating invoice:', error);
+      toast.error('Failed to generate invoice');
+    } finally {
+      setDownloadingInvoice(null);
+    }
+  };
 
   // Function to print invoice
   const printInvoice = (order) => {
