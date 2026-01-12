@@ -54,24 +54,32 @@ const generateInvoiceHTML = (order) => {
   // Calculate totals with GST
   let subtotal = 0;
   let totalGST = 0;
-  let gstBreakdown = {};
+  let itemsList = [];
   
-  order.items?.forEach(item => {
-    const product = item.product || {};
-    const gstPercentage = product.gstPercentage || 5;
-    const unitPrice = product.offerPrice || product.price || 0;
-    const quantity = item.quantity || 1;
-    const itemSubtotal = unitPrice * quantity;
-    const gstAmount = (itemSubtotal * gstPercentage) / 100;
-    
-    subtotal += itemSubtotal;
-    totalGST += gstAmount;
-    
-    if (!gstBreakdown[gstPercentage]) {
-      gstBreakdown[gstPercentage] = 0;
-    }
-    gstBreakdown[gstPercentage] += gstAmount;
-  });
+  if (order.items && order.items.length > 0) {
+    itemsList = order.items.map((item, index) => {
+      const product = item.product || {};
+      const gstPercentage = product.gstPercentage || 5;
+      const unitPrice = product.offerPrice || product.price || 0;
+      const quantity = item.quantity || 1;
+      const itemSubtotal = unitPrice * quantity;
+      const gstAmount = (itemSubtotal * gstPercentage) / 100;
+      const itemTotal = itemSubtotal + gstAmount;
+      
+      subtotal += itemSubtotal;
+      totalGST += gstAmount;
+      
+      return {
+        index: index + 1,
+        name: product.name || 'Product',
+        quantity: quantity,
+        unitPrice: unitPrice,
+        gstPercentage: gstPercentage,
+        gstAmount: gstAmount,
+        total: itemTotal
+      };
+    });
+  }
   
   const grandTotal = subtotal + totalGST;
   
@@ -83,14 +91,7 @@ const generateInvoiceHTML = (order) => {
     <!DOCTYPE html>
     <html>
     <head>
-      <meta charset="UTF-8">
       <style>
-        @page {
-          size: 80mm auto;
-          margin: 0;
-          padding: 0;
-        }
-        
         * {
           margin: 0;
           padding: 0;
@@ -99,75 +100,74 @@ const generateInvoiceHTML = (order) => {
         }
         
         body {
-          width: 80mm !important;
-          max-width: 80mm !important;
-          margin: 0 auto !important;
-          padding: 5px !important;
-          background: white !important;
-          font-size: 9px !important;
-          line-height: 1.1;
+          width: 80mm;
+          margin: 0 auto;
+          padding: 5px;
+          background: white;
+          font-size: 12px;
+          line-height: 1.2;
         }
         
         .invoice-container {
           width: 100%;
-          padding: 5px;
+          border: 1px solid #000;
+          padding: 8px;
         }
         
         .header {
           text-align: center;
-          border-bottom: 1px solid #000;
-          padding-bottom: 4px;
-          margin-bottom: 5px;
+          border-bottom: 2px solid #000;
+          padding-bottom: 6px;
+          margin-bottom: 8px;
         }
         
         .company-name {
-          font-size: 11px;
+          font-size: 16px;
           font-weight: bold;
-          margin-bottom: 1px;
+          margin-bottom: 2px;
           text-transform: uppercase;
         }
         
         .company-tagline {
-          font-size: 7px;
-          margin-bottom: 2px;
+          font-size: 10px;
+          margin-bottom: 3px;
           color: #555;
         }
         
         .gst-info {
-          font-size: 6px;
+          font-size: 9px;
           font-weight: bold;
         }
         
         .invoice-details {
           display: flex;
           justify-content: space-between;
-          margin-bottom: 5px;
-          font-size: 7px;
+          margin-bottom: 8px;
+          font-size: 10px;
         }
         
         .customer-info {
           background: #f5f5f5;
           border: 1px dashed #888;
-          padding: 4px;
-          margin-bottom: 5px;
-          font-size: 7px;
+          padding: 6px;
+          margin-bottom: 8px;
+          font-size: 10px;
         }
         
         .customer-label {
           font-weight: bold;
-          margin-bottom: 2px;
-          font-size: 8px;
+          margin-bottom: 3px;
         }
         
         .items-header {
           display: grid;
-          grid-template-columns: 25px 1fr 20px 35px 35px;
-          gap: 2px;
+          grid-template-columns: 40px 1fr 30px 50px 50px;
+          gap: 3px;
           font-weight: bold;
           border-bottom: 1px solid #000;
-          padding-bottom: 2px;
-          margin-bottom: 2px;
-          font-size: 7px;
+          padding-bottom: 3px;
+          margin-bottom: 3px;
+          font-size: 10px;
         }
         
         .items-header div {
@@ -180,119 +180,116 @@ const generateInvoiceHTML = (order) => {
         
         .item-row {
           display: grid;
-          grid-template-columns: 25px 1fr 20px 35px 35px;
-          gap: 2px;
-          padding: 1px 0;
+          grid-template-columns: 40px 1fr 30px 50px 50px;
+          gap: 3px;
+          padding: 2px 0;
           border-bottom: 0.5px dotted #ccc;
-          font-size: 7px;
+          font-size: 10px;
         }
         
         .item-row div {
           text-align: center;
+          overflow: hidden;
         }
         
         .item-row div:nth-child(2) {
           text-align: left;
-          word-wrap: break-word;
-          overflow: hidden;
+          overflow-wrap: break-word;
+          word-break: break-word;
         }
         
         .item-name {
           font-weight: bold;
-          font-size: 7px;
         }
         
         .item-gst {
-          font-size: 6px;
+          font-size: 8px;
           color: #666;
           margin-top: 1px;
         }
         
         .calculation {
-          margin-top: 5px;
+          margin-top: 8px;
           border-top: 1px solid #000;
-          padding-top: 4px;
-          font-size: 8px;
+          padding-top: 6px;
+          font-size: 11px;
         }
         
         .calc-row {
           display: flex;
           justify-content: space-between;
-          margin-bottom: 1px;
+          margin-bottom: 2px;
         }
         
         .gst-row {
           display: flex;
           justify-content: space-between;
-          padding-left: 8px;
+          padding-left: 10px;
           margin-bottom: 1px;
-          font-size: 6px;
-          color: #666;
+          font-size: 9px;
         }
         
         .grand-total {
           display: flex;
           justify-content: space-between;
-          margin-top: 4px;
-          padding-top: 4px;
-          border-top: 1px solid #000;
-          font-size: 9px;
+          margin-top: 6px;
+          padding-top: 6px;
+          border-top: 2px solid #000;
+          font-size: 13px;
           font-weight: bold;
         }
         
         .amount-words {
           background: #f5f5f5;
-          padding: 3px;
-          margin-top: 3px;
-          font-size: 6px;
-          border-left: 2px solid #000;
+          padding: 4px;
+          margin-top: 4px;
+          font-size: 9px;
+          border-left: 3px solid #000;
         }
         
         .payment-info {
           background: #f5f5f5;
-          padding: 4px;
-          margin-top: 5px;
-          border-radius: 2px;
-          font-size: 7px;
+          padding: 6px;
+          margin-top: 8px;
+          border-radius: 3px;
+          font-size: 10px;
         }
         
         .payment-row {
           display: flex;
           justify-content: space-between;
-          margin-bottom: 1px;
+          margin-bottom: 2px;
         }
         
         .footer {
           border-top: 1px solid #000;
-          margin-top: 6px;
-          padding-top: 4px;
+          margin-top: 10px;
+          padding-top: 6px;
           text-align: center;
-          font-size: 6px;
+          font-size: 9px;
         }
         
         .contact-info {
-          margin-bottom: 2px;
+          margin-bottom: 3px;
           font-weight: bold;
         }
         
         .terms {
           color: #666;
-          font-size: 5px;
-          margin-top: 3px;
-          line-height: 1.2;
+          font-size: 8px;
+          margin-top: 4px;
         }
         
         .thank-you {
           color: #000;
           font-weight: bold;
-          margin-top: 3px;
-          font-size: 7px;
+          margin-top: 5px;
         }
         
         @media print {
           body {
-            margin: 0 !important;
-            padding: 5px !important;
+            margin: 0;
+            padding: 5px;
           }
           .no-print {
             display: none !important;
@@ -312,13 +309,13 @@ const generateInvoiceHTML = (order) => {
         <!-- Invoice Details -->
         <div class="invoice-details">
           <div>
-            <strong>INV#:</strong> ${order._id?.slice(-8) || 'N/A'}<br>
+            <strong>INVOICE #:</strong> ${order._id?.slice(-8) || 'N/A'}<br>
             <strong>Date:</strong> ${formattedDate}<br>
             <strong>Time:</strong> ${formattedTime}
           </div>
           <div style="text-align: right;">
             <strong>TXN ID:</strong><br>
-            <span style="font-family: monospace; font-size: 6px;">${order.transactionId?.slice(-12) || 'N/A'}</span>
+            <span style="font-family: monospace;">${order.transactionId?.slice(-12) || 'N/A'}</span>
           </div>
         </div>
         
@@ -336,62 +333,39 @@ const generateInvoiceHTML = (order) => {
         
         <!-- Items Header -->
         <div class="items-header">
-          <div>#</div>
-          <div>Item</div>
+          <div>Sr.</div>
+          <div>Item Name</div>
           <div>Qty</div>
           <div>Price</div>
           <div>Total</div>
         </div>
         
         <!-- Items List -->
-        ${order.items?.map((item, index) => {
-          const product = item.product || {};
-          const gstPercentage = product.gstPercentage || 5;
-          const unitPrice = product.offerPrice || product.price || 0;
-          const quantity = item.quantity || 1;
-          const itemSubtotal = unitPrice * quantity;
-          const gstAmount = (itemSubtotal * gstPercentage) / 100;
-          const itemTotal = itemSubtotal + gstAmount;
-          
-          // Truncate name
-          const productName = product.name?.length > 25 
-            ? product.name.substring(0, 25) + '...' 
-            : product.name || 'Product';
-          
-          return `
-            <div class="item-row">
-              <div>${index + 1}</div>
-              <div>
-                <div class="item-name">${productName}</div>
-                <div class="item-gst">GST ${gstPercentage}%: ₹${gstAmount.toFixed(2)}</div>
-              </div>
-              <div>${quantity}</div>
-              <div>₹${unitPrice.toFixed(2)}</div>
-              <div style="font-weight: bold;">₹${itemTotal.toFixed(2)}</div>
+        ${itemsList.map(item => `
+          <div class="item-row">
+            <div>${item.index}</div>
+            <div>
+              <div class="item-name">${item.name.length > 20 ? item.name.substring(0, 20) + '...' : item.name}</div>
+              <div class="item-gst">GST ${item.gstPercentage}%: ₹${item.gstAmount.toFixed(2)}</div>
             </div>
-          `;
-        }).join('')}
+            <div>${item.quantity}</div>
+            <div>₹${item.unitPrice.toFixed(2)}</div>
+            <div style="font-weight: bold;">₹${item.total.toFixed(2)}</div>
+          </div>
+        `).join('')}
         
         <!-- Price Calculation -->
         <div class="calculation">
           <!-- Subtotal -->
           <div class="calc-row">
-            <span>Subtotal (${order.items?.length || 0} items):</span>
+            <span>Subtotal (${itemsList.length} items):</span>
             <span>₹${subtotal.toFixed(2)}</span>
           </div>
-          
-          <!-- GST Breakdown -->
-          ${Object.entries(gstBreakdown).map(([percentage, amount]) => `
-            <div class="gst-row">
-              <span>GST ${percentage}%:</span>
-              <span>₹${amount.toFixed(2)}</span>
-            </div>
-          `).join('')}
           
           <!-- Total GST -->
           <div class="calc-row">
             <span>Total GST:</span>
-            <span style="font-weight: bold;">₹${totalGST.toFixed(2)}</span>
+            <span>₹${totalGST.toFixed(2)}</span>
           </div>
           
           <!-- Shipping -->
@@ -402,30 +376,30 @@ const generateInvoiceHTML = (order) => {
           
           <!-- Grand Total -->
           <div class="grand-total">
-            <span>TOTAL:</span>
+            <span>GRAND TOTAL:</span>
             <span style="color: #008000;">₹${grandTotal.toFixed(2)}</span>
           </div>
           
           <!-- Amount in Words -->
           <div class="amount-words">
-            <strong>Amount:</strong> ${numberToWords(grandTotal)} only
+            <strong>Amount in Words:</strong> ${numberToWords(grandTotal)} only
           </div>
         </div>
         
         <!-- Payment Info -->
         <div class="payment-info">
           <div class="payment-row">
-            <span>Payment:</span>
+            <span>Payment Status:</span>
             <span style="color: ${order.isPaid ? '#008000' : '#FFA500'}; font-weight: bold;">
-              ${order.isPaid ? 'PAID' : 'PENDING'}
+              ${order.isPaid ? '✅ PAID' : '⏳ PENDING'}
             </span>
           </div>
           <div class="payment-row">
-            <span>Mode:</span>
+            <span>Payment Mode:</span>
             <span style="font-weight: bold;">${order.paymentType || 'ONLINE'}</span>
           </div>
           <div class="payment-row">
-            <span>Status:</span>
+            <span>Order Status:</span>
             <span style="font-weight: bold; color: #008000;">SHIPPED</span>
           </div>
         </div>
@@ -433,18 +407,17 @@ const generateInvoiceHTML = (order) => {
         <!-- Footer -->
         <div class="footer">
           <div class="contact-info">
-            📞 +91 8586845185
+            📞 +91 8586845185 | 📧 kuntalagrosohna@gmail.com
           </div>
-          <div style="margin-bottom: 2px;">
+          <div style="margin-bottom: 3px;">
             <strong>PAN:</strong> ${panNo} | <strong>GST:</strong> ${gstNo}
           </div>
           <div class="terms">
-            • Computer generated invoice • E. & O. E.<br>
-            • Goods sold are not returnable<br>
-            • Subject to Gurgaon jurisdiction
+            • This is a computer generated invoice • Valid without signature<br>
+            • Goods once sold will not be taken back • Subject to Gurgaon jurisdiction
           </div>
           <div class="thank-you">
-            Thank you! 🚚
+            Thank you for your business! 🚚
           </div>
         </div>
       </div>
@@ -524,95 +497,82 @@ const numberToWords = (num) => {
   return result;
 };
 
-// Download function - FIXED for exact 80mm receipt
+// Download function
 const downloadInvoice = async (order) => {
   try {
     setDownloadingInvoice(order._id);
     
-    // Create HTML content
-    const htmlContent = generateInvoiceHTML(order);
+    // Create a temporary iframe to render the HTML
+    const iframe = document.createElement('iframe');
+    iframe.style.position = 'absolute';
+    iframe.style.left = '-9999px';
+    iframe.style.width = '80mm';
+    iframe.style.height = '400px';
+    document.body.appendChild(iframe);
     
-    // Create a hidden div to render the invoice
-    const tempDiv = document.createElement('div');
-    tempDiv.style.position = 'fixed';
-    tempDiv.style.left = '0';
-    tempDiv.style.top = '0';
-    tempDiv.style.width = '80mm';
-    tempDiv.style.background = 'white';
-    tempDiv.style.padding = '5px';
-    tempDiv.style.zIndex = '9999';
-    tempDiv.style.visibility = 'hidden';
-    tempDiv.innerHTML = htmlContent;
-    document.body.appendChild(tempDiv);
+    // Write the HTML to iframe
+    iframe.contentDocument.write(generateInvoiceHTML(order));
+    iframe.contentDocument.close();
     
-    // Force render
-    await new Promise(resolve => setTimeout(resolve, 100));
+    // Wait for content to load
+    await new Promise(resolve => {
+      iframe.onload = resolve;
+      iframe.contentWindow.onload = resolve;
+    });
     
-    // Capture with html2canvas
-    const canvas = await html2canvas(tempDiv, {
-      scale: 2,
+    // Use html2canvas on iframe content
+    const canvas = await html2canvas(iframe.contentDocument.body, {
+      scale: 3,
       useCORS: true,
       logging: false,
       backgroundColor: '#ffffff',
-      width: 226, // 80mm in pixels (80 * 96/25.4 ≈ 302, but using 226 for better fit)
-      windowWidth: 226,
-      onclone: (clonedDoc) => {
-        // Ensure exact 80mm width in cloned document
-        const body = clonedDoc.body;
-        body.style.width = '80mm';
-        body.style.margin = '0 auto';
-        body.style.padding = '5px';
-      }
+      width: 226, // 80mm * 3.78 (mm to pixels)
+      windowWidth: 226
     });
     
-    // Remove temp div
-    document.body.removeChild(tempDiv);
+    // Remove iframe
+    document.body.removeChild(iframe);
     
-    // Create PDF with exact 80mm width
-    const imgWidth = 70; // 80mm - 5mm margin on each side
+    // Create PDF
+    const imgWidth = 70; // Leave margins
     const imgHeight = (canvas.height * imgWidth) / canvas.width;
-    
-    // Calculate PDF height (auto)
-    const pdfHeight = Math.max(imgHeight + 10, 100);
     
     const pdf = new jsPDF({
       orientation: 'portrait',
       unit: 'mm',
-      format: [80, pdfHeight]
+      format: [80, imgHeight + 20]
     });
     
     const imgData = canvas.toDataURL('image/png');
     pdf.addImage(imgData, 'PNG', 5, 5, imgWidth, imgHeight);
     
     // Save PDF
-    const fileName = `Invoice_${order._id?.slice(-8)}.pdf`;
+    const fileName = `Invoice_${order._id?.slice(-8)}_${new Date().toISOString().split('T')[0]}.pdf`;
     pdf.save(fileName);
     
     toast.success('Invoice downloaded successfully!');
   } catch (error) {
     console.error('Error generating invoice:', error);
-    toast.error('Failed to generate invoice');
-    
-    // Fallback: Open print version
-    printInvoice(order);
+    toast.error('Failed to generate invoice. Please try again.');
   } finally {
     setDownloadingInvoice(null);
   }
 };
 
-// Print function - Same as before
+// Print function
 const printInvoice = (order) => {
   const printWindow = window.open('', '_blank');
   printWindow.document.write(generateInvoiceHTML(order));
   printWindow.document.close();
+  printWindow.focus();
   
-  // Auto print after content loads
-  printWindow.onload = function() {
-    setTimeout(() => {
-      printWindow.print();
-    }, 500);
-  };
-};
+  // Wait a bit then print
+  setTimeout(() => {
+    printWindow.print();
+    // Optional: close window after print
+    // printWindow.close();
+  }, 500);
+};jasa invoice print ma aara ha same chaya download ma
 
   // Function to get color based on category
   const getCategoryColor = (category) => {
