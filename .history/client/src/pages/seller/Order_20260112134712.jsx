@@ -43,196 +43,15 @@ function Order() {
   };
 
  
- // Function to generate compact shipping invoice HTML
-const generateInvoiceHTML = (order) => {
-  if (!order) return '';
-  
-  const orderDate = order.createdAt ? new Date(order.createdAt) : new Date();
-  const formattedDate = orderDate.toLocaleDateString('en-IN');
-  
-  // Calculate total
-  let totalAmount = 0;
-  order.items?.forEach(item => {
-    const product = item.product || {};
-    const unitPrice = product.offerPrice || product.price || 0;
-    const quantity = item.quantity || 1;
-    totalAmount += unitPrice * quantity;
-  });
-
-  return `
-    <div id="invoice-content" style="font-family: 'Arial', sans-serif; width: 80mm; margin: 0 auto; padding: 8px; background: white; font-size: 9px;">
-      <!-- Header - Minimal -->
-      <div style="text-align: center; border-bottom: 1px solid #000; padding-bottom: 5px; margin-bottom: 8px;">
-        <h2 style="margin: 0; font-size: 12px; font-weight: bold;">KUNTALAGRO AGENCIES</h2>
-        <p style="margin: 2px 0; font-size: 8px;">SHIPPING INVOICE</p>
-      </div>
-
-      <!-- Invoice & Date -->
-      <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-        <div>
-          <strong>INV#:</strong> ${order._id?.slice(-6) || 'N/A'}<br>
-          <strong>Date:</strong> ${formattedDate}
-        </div>
-        <div>
-          <strong>Txn ID:</strong><br>
-          ${order.transactionId?.slice(-12) || 'N/A'}
-        </div>
-      </div>
-
-      <!-- Customer Info - Essential Only -->
-      ${order.address ? `
-        <div style="margin-bottom: 8px; border: 0.5px dashed #999; padding: 5px;">
-          <div style="font-weight: bold; margin-bottom: 2px;">SHIP TO:</div>
-          <div><strong>${order.address.firstname || ''} ${order.address.lastname || ''}</strong></div>
-          <div>📱 ${order.address.phone || 'N/A'}</div>
-          <div>${order.address.street || ''}</div>
-          <div>${order.address.city || ''}, ${order.address.state || ''}</div>
-          <div>PIN: ${order.address.zipcode || ''}</div>
-        </div>
-      ` : ''}
-
-      <!-- Items List - Simple -->
-      <div style="margin-bottom: 8px;">
-        <div style="font-weight: bold; border-bottom: 0.5px solid #000; padding-bottom: 2px; margin-bottom: 3px;">
-          ITEMS (${order.items?.length || 0})
-        </div>
-        <div style="max-height: 120px; overflow-y: auto;">
-          ${order.items?.map((item, index) => {
-            const product = item.product || {};
-            const unitPrice = product.offerPrice || product.price || 0;
-            const quantity = item.quantity || 1;
-            const itemTotal = unitPrice * quantity;
-            
-            // Truncate long product names
-            const productName = product.name?.length > 25 
-              ? product.name.substring(0, 25) + '...' 
-              : product.name || 'Product';
-            
-            return `
-              <div style="border-bottom: 0.5px dotted #ccc; padding: 3px 0;">
-                <div style="display: flex; justify-content: space-between;">
-                  <span>${index + 1}. ${productName}</span>
-                  <span>₹${itemTotal.toFixed(2)}</span>
-                </div>
-                <div style="display: flex; justify-content: space-between; color: #666; font-size: 8px;">
-                  <span>Qty: ${quantity} x ₹${unitPrice.toFixed(2)}</span>
-                  <span>${product.category || ''}</span>
-                </div>
-              </div>
-            `;
-          }).join('')}
-        </div>
-      </div>
-
-      <!-- Totals - Simple -->
-      <div style="border-top: 1px solid #000; padding-top: 5px;">
-        <div style="display: flex; justify-content: space-between; font-size: 10px;">
-          <strong>TOTAL:</strong>
-          <strong style="font-size: 11px;">₹${totalAmount.toFixed(2)}</strong>
-        </div>
-        <div style="font-size: 8px; color: #666; margin-top: 2px;">
-          ${numberToWords(totalAmount)} only
-        </div>
-      </div>
-
-      <!-- Payment & Shipping -->
-      <div style="margin-top: 8px; font-size: 8px; color: #666;">
-        <div style="display: flex; justify-content: space-between;">
-          <span>Payment: <strong style="color: ${order.isPaid ? 'green' : 'orange'};">${order.isPaid ? 'PAID' : 'PENDING'}</strong></span>
-          <span>Mode: ${order.paymentType || 'ONLINE'}</span>
-        </div>
-        <div style="margin-top: 3px;">
-          📦 Shipping: <strong>STANDARD</strong>
-        </div>
-      </div>
-
-      <!-- Footer - Minimal -->
-      <div style="border-top: 0.5px solid #000; margin-top: 10px; padding-top: 5px; text-align: center; font-size: 7px;">
-        <div><strong>For any queries: +91 8586845185</strong></div>
-        <div style="color: #999; margin-top: 3px;">E. & O. E. | Computer Generated</div>
-      </div>
-    </div>
-  `;
-};
-
-// Simplified number to words function
-const numberToWords = (num) => {
-  const rupees = Math.floor(num);
-  const paise = Math.round((num - rupees) * 100);
-  
-  const units = ['', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine'];
-  const teens = ['Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen'];
-  const tens = ['', '', 'Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety'];
-  
-  const convert = (n) => {
-    if (n < 10) return units[n];
-    if (n < 20) return teens[n - 10];
-    if (n < 100) return tens[Math.floor(n / 10)] + (n % 10 !== 0 ? ' ' + units[n % 10] : '');
-    return '';
-  };
-  
-  let result = convert(rupees) + ' Rupees';
-  if (paise > 0) {
-    result += ' and ' + convert(paise) + ' Paise';
-  }
-  
-  return result;
-};
-
-// Updated download function for shipping invoice
-const downloadInvoice = async (order) => {
-  try {
-    setDownloadingInvoice(order._id);
-    
-    const tempDiv = document.createElement('div');
-    tempDiv.style.position = 'absolute';
-    tempDiv.style.left = '-9999px';
-    tempDiv.innerHTML = generateInvoiceHTML(order);
-    document.body.appendChild(tempDiv);
-    
-    const canvas = await html2canvas(tempDiv, {
-      scale: 3,
-      useCORS: true,
-      logging: false,
-      backgroundColor: '#ffffff',
-      width: 226, // 80mm width
-    });
-    
-    document.body.removeChild(tempDiv);
-    
-    // Shipping invoice PDF (small size)
-    const pdf = new jsPDF({
-      orientation: 'portrait',
-      unit: 'mm',
-      format: [80, 120] // Small shipping invoice size
-    });
-    
-    const imgData = canvas.toDataURL('image/png');
-    const imgWidth = 70;
-    const imgHeight = (canvas.height * imgWidth) / canvas.width;
-    
-    pdf.addImage(imgData, 'PNG', 5, 5, imgWidth, imgHeight);
-    
-    const fileName = `Shipping_Invoice_${order._id.slice(-6)}.pdf`;
-    pdf.save(fileName);
-    
-    toast.success('Shipping invoice downloaded!');
-  } catch (error) {
-    console.error('Error generating invoice:', error);
-    toast.error('Failed to generate invoice');
-  } finally {
-    setDownloadingInvoice(null);
-  }
-};
-
-// Print function for shipping invoice
+  // Function to print invoice
+ // Function to print compact invoice
 const printInvoice = (order) => {
   const printWindow = window.open('', '_blank');
   printWindow.document.write(`
     <!DOCTYPE html>
     <html>
     <head>
-      <title>Shipping Invoice - ${order._id?.slice(-6)}</title>
+      <title>Invoice - ${order._id?.slice(-8)}</title>
       <style>
         @media print {
           @page {
@@ -242,12 +61,14 @@ const printInvoice = (order) => {
           body { 
             margin: 0; 
             padding: 5px; 
+            font-size: 9px; 
             width: 80mm;
-            font-size: 9px !important;
           }
           .no-print { display: none !important; }
-          * {
-            font-size: 9px !important;
+          .invoice-content {
+            width: 70mm !important;
+            margin: 0 auto !important;
+            padding: 5px !important;
           }
         }
         body { 
@@ -255,33 +76,44 @@ const printInvoice = (order) => {
           font-size: 9px;
           width: 80mm;
           margin: 0 auto;
-          padding: 5px;
+          padding: 10px;
+        }
+        .invoice-content {
+          width: 70mm;
+          margin: 0 auto;
+          padding: 10px;
+          border: 1px solid #ddd;
+        }
+        .print-controls {
+          text-align: center;
+          margin-top: 20px;
+          padding: 20px;
+        }
+        button {
+          padding: 8px 16px;
+          margin: 5px;
+          border: none;
+          border-radius: 4px;
+          cursor: pointer;
+          font-size: 12px;
         }
         .print-btn {
           background: #4FBF8B;
           color: white;
-          padding: 8px 16px;
-          border: none;
-          border-radius: 4px;
-          cursor: pointer;
-          margin: 5px;
         }
         .close-btn {
           background: #666;
           color: white;
-          padding: 8px 16px;
-          border: none;
-          border-radius: 4px;
-          cursor: pointer;
-          margin: 5px;
         }
       </style>
     </head>
     <body>
-      ${generateInvoiceHTML(order)}
-      <div style="text-align: center; margin-top: 20px;" class="no-print">
-        <button onclick="window.print()" class="print-btn">🖨️ Print Invoice</button>
-        <button onclick="window.close()" class="close-btn">❌ Close</button>
+      <div class="invoice-content">
+        ${generateInvoiceHTML(order)}
+      </div>
+      <div class="print-controls no-print">
+        <button onclick="window.print()" class="print-btn">Print Invoice</button>
+        <button onclick="window.close()" class="close-btn">Close</button>
       </div>
     </body>
     </html>
