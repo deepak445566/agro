@@ -477,7 +477,7 @@ _This is an automated order notification. Please process the order._`;
           </div>
           
           <p className="flex justify-between border-t pt-2">
-            <span className="font-medium">DTDC Shipping Charge</span>
+            <span className="font-medium">DTDC Shipping CHA</span>
             <span className={`font-medium ${calculateTotalShipping() === 0 ? "text-green-600" : ""}`}>
               ₹{calculateTotalShipping().toFixed(2)} {calculateTotalShipping() === 0 ? "(Free Shipping)" : ""}
             </span>
